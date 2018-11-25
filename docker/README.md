@@ -1,22 +1,20 @@
-Build docker image containing SomaticWrapper (CWL branch) and all
+Build docker image containing TinDaisy-Core and all
 necessary software to run it.
 
-`./docker.testing` includes scripts to start docker image and execute
+`../docker.testing` includes scripts to start docker image and execute
 specific steps from within the docker environment.  This is useful for
 debugging and feature development.
 
 `./StrelkaDemo.dat` includes small test dataset (`StrelkaDemo`) which is used
 for testing of workflow.
 
-See also [TinDaisy](https://github.com/ding-lab/tin-daisy) for a workflow wrapper
-which includes SomaticWrapper:CWL
-
+[TinDaisy](https://github.com/ding-lab/TinDaisy) is an associated CWL-based workflow wrapper
+which includes TinDaisy-Core
 
 ## Tags
 
-Images are tagged with,
+Currently TinDaisy-Core has the following image:
+`cgc-images.sbgenomics.com/m_wyczalkowski/tindaisy-core`
 
-`docker tag cgc-images.sbgenomics.com/m_wyczalkowski/somatic-wrapper:cwl-dev cgc-images.sbgenomics.com/m_wyczalkowski/somatic-wrapper:20180926`
+These should be tagged with specific versions.
 
-and then pushed with 
-`docker push cgc-images.sbgenomics.com/m_wyczalkowski/somatic-wrapper:20180926`
