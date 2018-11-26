@@ -164,7 +164,7 @@ COPY vimrc /root/.vimrc
 # change the hash below to force clone
 # get it with git rev-parse HEAD, though it doesn't matter what it is as long as it changes
 # TinDaisy-Core will clone into directory named somaticwrapper, to minize difference with previous versions
-ENV latest_commit boo102
+ENV latest_commit boo103
 RUN cd /usr/local \
     && git clone https://github.com/ding-lab/TinDaisy-Core.git somaticwrapper
 

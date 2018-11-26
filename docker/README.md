@@ -14,7 +14,6 @@ which includes TinDaisy-Core
 ## Tags
 
 Currently TinDaisy-Core has the following image:
-`cgc-images.sbgenomics.com/m_wyczalkowski/tindaisy-core`
+`cgc-images.sbgenomics.com/m_wyczalkowski/tindaisy-core:20181126`
 
-These should be tagged with specific versions.
 
