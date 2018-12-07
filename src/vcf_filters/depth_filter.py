@@ -83,11 +83,17 @@ class DepthFilter(ConfigFileFilter):
         return depth
 
     def get_depth_mutect(self, VCF_data):
-    # ##FORMAT=<ID=AD,Number=.,Type=Integer,Description="Allelic depths for the ref and alt alleles in the order listed">
+    # Depth can be obtained in one of two ways, with AD (allelic depths) or DP (read depth) values in VCF:
+    # FORMAT=<ID=AD,Number=.,Type=Integer,Description="Allelic depths for the ref and alt alleles in the order listed">
+    # FORMAT=<ID=DP,Number=1,Type=Integer,Description="Approximate read depth (reads with MQ=255 or with bad mates are filtered)">
+    # Testing indicates these are very similar.  SomaticWrapper uses AD, so we'll use AD here too
         rc_ref, rc_var = VCF_data.AD
         depth = rc_ref + rc_var
+
+#        depth_DP = VCF_data.DP
         if self.debug:
             eprint("mutect depth = %d" % depth)
+#            eprint("mutect depth_AD = %d, depth_DP = %d " % (depth, depth_DP) )
         return depth
 
     def get_depth(self, VCF_record, sample_name):
