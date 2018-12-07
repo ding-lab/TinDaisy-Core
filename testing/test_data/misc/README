@@ -1,0 +1,6 @@
+mutect_result.filtered.vcf obtained from:
+    /diskmnt/Projects/cptac_downloads_4/Rabix/mutect-2018-11-28-133008.987/root/mutect_result.filtered.vcf
+with,
+    zcat manta_result.vcf.gz | grep -v REJECT | grep -v chrUn > mutect_result.filtered.vcf
+
+It is example call set from mutect for case C3L-00004

@@ -10,6 +10,9 @@
 #   --caller CALLER - one of strelka, varscan, or pindel. Alternatively, this may be specified in config file
 # If output.vcf is -, write to stdout
 
+# TODO: Implement mutect filter support.  Need to be able to remove REJECT calls, either in filter here
+# or in upstream (as argument to caller?)
+
 if [ "$#" -lt 3 ]; then
     >&2 echo Error: Wrong number of arguments
     >&2 echo Usage:  bash run_combined_filter.sh input.vcf config.ini output.vcf \[args\]

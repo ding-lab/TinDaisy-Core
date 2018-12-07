@@ -9,7 +9,7 @@ import sys
 # * max_vaf_germline
 # * tumor_name
 # * normal_name
-# * caller - specifies tool used for variant call. 'strelka', 'varscan', 'pindel', 'merged'
+# * caller - specifies tool used for variant call. 'strelka', 'varscan', 'pindel', 'merged', 'mutect'
 #
 # These may be specified on the command line (e.g., --min_vaf_somatic 0.05) or in
 # configuration file, as specified by --config config.ini  Sample contents of config file:
@@ -36,7 +36,7 @@ class TumorNormal_VAF(ConfigFileFilter):
         parser.add_argument('--max_vaf_germline', type=float, help='Retain sites where normal VAF <= than given value')
         parser.add_argument('--tumor_name', type=str, help='Tumor sample name in VCF')
         parser.add_argument('--normal_name', type=str, help='Normal sample name in VCF')
-        parser.add_argument('--caller', type=str, choices=['strelka', 'varscan', 'pindel', 'merged'], help='Caller type')
+        parser.add_argument('--caller', type=str, choices=['strelka', 'varscan', 'mutect', 'pindel', 'merged'], help='Caller type')
         parser.add_argument('--config', type=str, help='Optional configuration file')
         parser.add_argument('--debug', action="store_true", default=False, help='Print debugging information to stderr')
         parser.add_argument('--bypass', action="store_true", default=False, help='Bypass filter by retaining all variants')
@@ -96,6 +96,15 @@ class TumorNormal_VAF(ConfigFileFilter):
             eprint("VCF_data.FREQ = %s" % vaf)
         return float(vaf.strip('%'))/100.
 
+    def get_readcounts_mutect(self, VCF_record, VCF_data):
+        # We'll take advantage of pre-calculated VAF
+        # ##FORMAT=<ID=FA,Number=A,Type=Float,Description="Allele fraction of the alternate allele with regard to reference">
+        # TODO: Confirm this works!
+        vaf = VCF_data.FA
+        if self.debug:
+            eprint("VCF_data.FA = %s" % vaf)
+        return float(vaf)
+
     def get_readcounts_pindel(self, VCF_record, VCF_data):
         # read counts supporting reference, variant, resp.
         # If both are zero, avoid division by zero and return 0
@@ -117,6 +126,8 @@ class TumorNormal_VAF(ConfigFileFilter):
             return self.get_readcounts_strelka(VCF_record, data)
         elif variant_caller == 'varscan':
             return self.get_readcounts_varscan(VCF_record, data)
+        elif variant_caller == 'mutect':
+            return self.get_readcounts_mutect(VCF_record, data)
         elif variant_caller == 'pindel':
             return self.get_readcounts_pindel(VCF_record, data)
         elif variant_caller == 'merged':

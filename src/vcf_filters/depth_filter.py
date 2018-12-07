@@ -7,7 +7,7 @@ import sys
 # * min_depth
 # * tumor_name
 # * normal_name
-# * caller caller - specifies tool used for variant call. 'strelka', 'varscan', 'pindel'
+# * caller caller - specifies tool used for variant call. 'strelka', 'varscan', 'pindel', 'mutect'
 #
 # These may be specified on the command line (e.g., --min_depth 10) or in
 # configuration file, as specified by --config config.ini  Sample contents of config file:
@@ -33,7 +33,7 @@ class DepthFilter(ConfigFileFilter):
         parser.add_argument('--min_depth', type=int, help='Retain sites where read depth for tumor and normal > given value')
         parser.add_argument('--tumor_name', type=str, help='Tumor sample name in VCF')
         parser.add_argument('--normal_name', type=str, help='Normal sample name in VCF')
-        parser.add_argument('--caller', type=str, choices=['strelka', 'varscan', 'pindel'], help='Caller type')
+        parser.add_argument('--caller', type=str, choices=['strelka', 'varscan', 'pindel', 'mutect'], help='Caller type')
         parser.add_argument('--debug', action="store_true", default=False, help='Print debugging information to stderr')
         parser.add_argument('--config', type=str, help='Optional configuration file')
         parser.add_argument('--bypass', action="store_true", default=False, help='Bypass filter by retaining all variants')
@@ -82,6 +82,14 @@ class DepthFilter(ConfigFileFilter):
             eprint("pindel depth = %d" % depth)
         return depth
 
+    def get_depth_mutect(self, VCF_data):
+    # ##FORMAT=<ID=AD,Number=.,Type=Integer,Description="Allelic depths for the ref and alt alleles in the order listed">
+        rc_ref, rc_var = VCF_data.AD
+        depth = rc_ref + rc_var
+        if self.debug:
+            eprint("mutect depth = %d" % depth)
+        return depth
+
     def get_depth(self, VCF_record, sample_name):
         data=VCF_record.genotype(sample_name).data
         variant_caller = self.caller  
@@ -91,6 +99,8 @@ class DepthFilter(ConfigFileFilter):
             return self.get_depth_varscan(data)
         elif variant_caller == 'pindel':
             return self.get_depth_pindel(data)
+        elif variant_caller == 'mutect':
+            return self.get_depth_mutect(data)
         else:
             raise Exception( "Unknown caller: " + variant_caller)
 
