@@ -1,20 +1,18 @@
 # Basic script to start bash in a SomaticWrapper container in standard Docker 
 
-# SomaticWrapper.workflow starts SomaticWrapper docker container with more features
-# and works with MGI's non-standard Docker environment
+# Directory below maps to /data in container
+DATD="test_data"
 
-# This starts mwyczalkowski/somatic-wrapper:latest and maps directories:
-# Container: /data  
-# Host: /Users/mwyczalk/src/SomaticWrapper/data
+IMAGE="cgc-images.sbgenomics.com/m_wyczalkowski/tindaisy-core"
 
-# Note that DATAD is mapped to the container
-# SomaticWrapper work directory is $DATAD/data
-#   This allows directories not executed by SomaticWrapper (e.g., A_Reference) to exist on the data partition too
-DATAD="/Users/mwyczalk/Projects/Rabix/TinDaisy/StrelkaDemo.dat"
-#DATAD="/diskmnt/Projects/Users/hsun/beta_tinDaisy/tin-daisy/results/TinDaisy.workflow-2018-08-28-223657.204/root"  # Testing 
-IMAGE="cgc-images.sbgenomics.com/m_wyczalkowski/somatic-wrapper:cwl"
+# Get absolute path in system-independent way
+# see https://stackoverflow.com/questions/1055671/how-can-i-get-the-behavior-of-gnus-readlink-f-on-a-mac
+ADATD=$(python -c 'import os,sys;print(os.path.realpath(sys.argv[1]))' $DATD)
 
-docker run -v $DATAD:/data -it $IMAGE
+>&2 echo Starting docker image $IMAGE
+>&2 echo Mapping $ADATD to /data
+
+docker run -v $ADATD:/data -it $IMAGE
 
 # To start another terminal in running container, first get name of running container with `docker ps`,
 # then start bash in it with,
