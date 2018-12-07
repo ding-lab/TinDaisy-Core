@@ -99,10 +99,14 @@ class TumorNormal_VAF(ConfigFileFilter):
     def get_readcounts_mutect(self, VCF_record, VCF_data):
         # We'll take advantage of pre-calculated VAF
         # ##FORMAT=<ID=FA,Number=A,Type=Float,Description="Allele fraction of the alternate allele with regard to reference">
-        # TODO: Confirm this works!
         vaf = VCF_data.FA
         if self.debug:
             eprint("VCF_data.FA = %s" % vaf)
+        # This could equivalently be calculated with,
+        #rc_ref, rc_var = VCF_data.AD
+        #depth = rc_ref + rc_var
+        #vaf_calc= float(rc_var) / depth
+        
         return float(vaf)
 
     def get_readcounts_pindel(self, VCF_record, VCF_data):
