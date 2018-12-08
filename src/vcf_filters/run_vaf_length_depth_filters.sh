@@ -1,17 +1,18 @@
 # run VAF, length, and read depth filters on a VCF
 # Usage:
-#   bash run_combined_filter.sh input.vcf config.ini output.vcf [args]
+#   bash run_vaf_length_depth_filters.sh input.vcf config.ini output.vcf [args]
 # config.ini is configuration file used by all filters
 # args are zero or more optional arguments:
 #   --bypass_vaf, --bypass_depth, --bypass_length will skip just that filter
 #   --bypass will skip all filters
 #   --debug will print out debug info to STDERR for all filters
 #   --debug_vaf, debug_depth, debug_length - debug specific to filter
-#   --caller CALLER - one of strelka, varscan, or pindel. Alternatively, this may be specified in config file
+#   --caller CALLER - one of strelka, varscan, pindel, or mutect. May be specified in config file instead
+#       This is deprecated.  Doesn't play well with XARGS parsing.  Suggest specify in config file
 # If output.vcf is -, write to stdout
 
-# TODO: Implement mutect filter support.  Need to be able to remove REJECT calls, either in filter here
-# or in upstream (as argument to caller?)
+# Combined filter executes vaf, length, and depth filters in a unix pipeline:
+#   python vaf_filter ... | python length_filter ... | python depth_filter ... > output.vcf
 
 if [ "$#" -lt 3 ]; then
     >&2 echo Error: Wrong number of arguments
@@ -86,7 +87,6 @@ else
 $VAF_FILTER $VCF $VAF_FILTER_ARGS | $LENGTH_FILTER - $LENGTH_FILTER_ARGS | $DEPTH_FILTER - $DEPTH_FILTER_ARGS > $OUT
 
 fi
-
 
 # Evaluate return value for chain of pipes; see https://stackoverflow.com/questions/90418/exit-shell-script-based-on-process-exit-code
 rcs=${PIPESTATUS[*]};
