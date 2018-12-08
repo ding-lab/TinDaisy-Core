@@ -29,7 +29,6 @@ PINDEL_VCF="/data/StrelkaDemo-results/pindel/filter_out/pindel.out.current_final
 
 run_vaf_filter $MUTECT_VCF $MUTECT_CONFIG --debug "$@"
 
-exit
 run_vaf_filter $STRELKA_VCF $STRELKA_CONFIG --debug "$@"
 
 run_vaf_filter $VARSCAN_VCF $VARSCAN_CONFIG --bypass --debug "$@"

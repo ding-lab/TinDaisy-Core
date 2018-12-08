@@ -1,6 +1,8 @@
 source common_config.sh
 
-VEP_VCF="StrelkaDemo-results/C3N-01649-results/vep_annotate/results/output.unfiltered.vcf"
+# This won't work because C3N-01649 data not distributed with this project
+
+VEP_VCF="/data/StrelkaDemo-results/C3N-01649-results/vep_annotate/results/output.unfiltered.vcf"
 AF_CONFIG="../../params/af_filter_config.ini"
 CLASS_CONFIG="../../params/classification_filter_config.ini"
 #ARGS="--debug --bypass"
