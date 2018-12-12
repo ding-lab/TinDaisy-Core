@@ -1,8 +1,10 @@
 # Testing depth filter using pyvcf's exensible vcf_filter.py framework
 source common_config.sh
 
+# This won't work because C3N-01649 data not distributed with this project
+
 # Note: require the --flag_pick flag when running vep
-VEP_VCF="StrelkaDemo-results/C3N-01649-results/vep_annotate/results/output.unfiltered.vcf"
+VEP_VCF="/data/StrelkaDemo-results/C3N-01649-results/vep_annotate/results/output.unfiltered.vcf"
 CONFIG="--config ../../params/classification_filter_config.ini"
 
 AF_FILTER_LOCAL="classification_filter.py"  # filter module

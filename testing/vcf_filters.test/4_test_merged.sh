@@ -2,12 +2,14 @@
 # run_merged_filter.sh exists as a wrapper script so it can easily be called from workflow
 source common_config.sh
 
-VCF="StrelkaDemo-results/merged/merged.vcf"
+VCF="/data/StrelkaDemo-results/merged/merged.vcf"
+
 
 RUN="../../src/vcf_filters/run_merged_filter.sh"
 OUT="-"
 bash $RUN $VCF $OUT --debug
 
+mkdir -p tmp
 OUT="tmp/merged1.vcf"
 bash $RUN $VCF $OUT --bypass
 

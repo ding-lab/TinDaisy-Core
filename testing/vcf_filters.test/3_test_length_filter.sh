@@ -12,10 +12,11 @@ $MAIN_FILTER --local-script $FILTER_LOCAL $VCF length $CONFIG $XARGS
 
 }
 
-CONFIG="--config ../../params/vcf_filter_config.ini"
+# use Varscan config for both for simplicity
+CONFIG="--config ../../params/vcf_filter_config-varscan.ini"
 
-VARSCAN_INDEL_VCF="StrelkaDemo-results/varscan/filter_out/varscan.out.som_indel.Somatic.hc.dbsnp_pass.vcf"
-PINDEL_VCF="StrelkaDemo-results/pindel/filter_out/pindel.out.current_final.dbsnp_pass.vcf"
+VARSCAN_INDEL_VCF="/data/StrelkaDemo-results/varscan/filter_out/varscan.out.som_indel.Somatic.hc.dbsnp_pass.vcf"
+PINDEL_VCF="/data/StrelkaDemo-results/pindel/filter_out/pindel.out.current_final.dbsnp_pass.vcf"
 
 run_length_filter $VARSCAN_INDEL_VCF --debug 
 
