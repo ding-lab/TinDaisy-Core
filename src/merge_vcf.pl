@@ -1,9 +1,13 @@
 # Combine VCF files from several callers into one
 # The following files are combined:
 # * strelka SNV
+# * strelka indel (sindel)
 # * varscan SNV
 # * varscan indel (aka varindel)
+# * mutect SNV 
 # * pindel indel
+
+# Note, Song uses vaf_filter_v1.3.pl to implement 2/3 filtering strategy
 
 # --bypass_merge - skips merge filter by retaining all reads
 # $bypass is an optional flag which if set will bypass the filter and retain all reaads
@@ -21,11 +25,14 @@ sub merge_vcf {
     my $REF = shift;
 
     my $strelka_snv_vcf = shift;
-    my $varscan_indel_vcf = shift;
+    my $strelka_indel_vcf = shift; # new
     my $varscan_snv_vcf = shift;
+    my $varscan_indel_vcf = shift;
+    my $mutect_vcf = shift; # new
     my $pindel_vcf = shift;
     my $bypass_merge = shift;
     my $debug = shift;
+
 
     my $bypass_str = $bypass_merge ? "--bypass_merge" : "";
     my $debug_str = $debug ? "--debug" : "";
@@ -41,10 +48,27 @@ sub merge_vcf {
     print STDERR "Writing to $runfn\n";
     open(OUT, ">$runfn") or die $!;
 
+#New merge script from SomaticWrapper.working/somaticwrapper.pl
+#   java \${JAVA_OPTS} -jar $gatk -R $h38_REF -T CombineVariants -o \${MERGER_OUT} 
+#       --variant:varscan \${VARSCAN_VCF} 
+#       --variant:strelka \${STRELKA_VCF} 
+#       --variant:mutect \${MUTECT_VCF} 
+#       --variant:varindel \${VARSCAN_INDEL} 
+#       --variant:sindel \${STRELKA_INDEL} 
+#       --variant:pindel \${PINDEL_VCF_FILTER} 
+#       -genotypeMergeOptions PRIORITIZE -priority strelka,varscan,mutect,sindel,varindel,pindel
+
     print OUT <<"EOF";
 #!/bin/bash
 export JAVA_OPTS=\"-Xmx2g\"
- java \$JAVA_OPTS -jar $SWpaths::gatk_jar -R $REF -T CombineVariants -o $merger_out_tmp --variant:varscan $varscan_snv_vcf --variant:strelka $strelka_snv_vcf --variant:varindel $varscan_indel_vcf --variant:pindel $pindel_vcf -genotypeMergeOptions PRIORITIZE -priority strelka,varscan,pindel,varindel
+ java \$JAVA_OPTS -jar $SWpaths::gatk_jar -R $REF -T CombineVariants -o $merger_out_tmp \\
+    --variant:varscan $varscan_snv_vcf \\
+    --variant:strelka $strelka_snv_vcf \\
+    --variant:mutect $mutect_vcf \\
+    --variant:varindel $varscan_indel_vcf \\
+    --variant:sindel $strelka_indel_vcf \\
+    --variant:pindel $pindel_vcf \\
+    -genotypeMergeOptions PRIORITIZE -priority strelka,varscan,mutect,sindel,varindel,pindel
 
 # Evaluate return value see https://stackoverflow.com/questions/90418/exit-shell-script-based-on-process-exit-code
 rc=\$?
