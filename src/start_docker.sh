@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Matthew Wyczalkowski <m.wyczalkowski@wustl.edu>
-# Yige Wu <yigewu@wustl.edu>
 # https://dinglab.wustl.edu/
 
 # Start docker container in regular and/or MGI environment, and optionally map given paths to /data1, /data2, ...
@@ -10,7 +9,7 @@
 # -M: run in MGI environment
 # -L LOGD_H: Log directory on host.  Logs are written to $LOGD_H/log/*.[err|out]
 # -d: dry run.  print out docker statement but do not execute
-# -I DOCKER_IMAGE: Specify docker image.  Default: mwyczalkowski/bicseq2:latest
+# -I DOCKER_IMAGE: Specify docker image.  Default: cgc-images.sbgenomics.com/m_wyczalkowski/tindaisy-core:latest
 # -c CMD: run given command.  default: bash
 # -H mntH : additional host mount, may be a file or directory, relative path OK.  If defined, -C must also be defined
 # -C mntC : additional container command.  mntH will be mapped to mntC
@@ -18,7 +17,6 @@
 # -g LSF_GROUP: LSF group to start in.  MGI mode only
 
 # data_path will map to /data in container
-# TODO: make /data1 be rw, others ro
 #
 # Details about LSF_GROUP: https://github.com/ding-lab/importGDC.CPTAC3
 # See also https://confluence.gsc.wustl.edu/pages/viewpage.action?pageId=27592450
@@ -26,7 +24,7 @@
 
 SCRIPT=$(basename $0)
 
-DOCKER_IMAGE="mwyczalkowski/bicseq2:latest"
+DOCKER_IMAGE="cgc-images.sbgenomics.com/m_wyczalkowski/tindaisy-core:latest"
 
 LSFQ="-q research-hpc"  # MGI LSF queue.  
 LSF_ARGS=""
