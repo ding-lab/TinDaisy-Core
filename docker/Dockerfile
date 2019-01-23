@@ -156,7 +156,7 @@ RUN cd /usr/local \
     && tar -zxf mskcc-vcf2maf.tar.gz \
     && ln -s mskcc-vcf2maf-* mskcc-vcf2maf 
 
-COPY vimrc /root/.vimrc
+COPY docker/vimrc /root/.vimrc
 
 # TinDaisy-Core is copied into directory named somaticwrapper, to minize difference with previous versions
 COPY . /usr/local/somaticwrapper

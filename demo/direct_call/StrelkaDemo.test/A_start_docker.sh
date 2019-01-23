@@ -17,13 +17,13 @@ mkdir -p $OUTD
 # Note that we're repeating a lot of mount paths, but that will be the case only for StrelkaDemo
 PROJECT_PATH="/home/mwyczalk_test/Projects/TinDaisy/TinDaisy-Core"
 PARAMS_H="$PROJECT_PATH/params"
-STRELKA_DEMO_DATA_H="$PROJECT_PATH/demo/test_data"
+STRELKA_DEMO_DATA_H="$PROJECT_PATH/demo/test_data/StrelkaDemo.dat"
 
-bash $PROJECT_PATH/src/start_docker.sh  $@ \
-    $OUTD \                         # /data1
-    $STRELKA_DEMO_DATA_H \          # /data2
-    $STRELKA_DEMO_DATA_H \          # /data3
-    $PARAMS_H \                     # /data4
-    $STRELKA_DEMO_DATA_H \          # /data6
-    $STRELKA_DEMO_DATA_H            # /data7
+bash $PROJECT_PATH/src/start_docker.sh  -I $IMG $@ \
+    $OUTD \
+    $STRELKA_DEMO_DATA_H \
+    $STRELKA_DEMO_DATA_H \
+    $PARAMS_H \
+    $STRELKA_DEMO_DATA_H \
+    $STRELKA_DEMO_DATA_H            
 
