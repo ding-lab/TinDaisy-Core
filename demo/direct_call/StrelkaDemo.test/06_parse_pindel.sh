@@ -1,5 +1,4 @@
-DATAD="/usr/local/somaticwrapper/testing/StrelkaDemo.dat"
-source project_config.sh $DATAD
+source project_data.sh
 
 STEP="parse_pindel"
 
@@ -13,7 +12,7 @@ STEP="parse_pindel"
 #    --bypass : bypass all filters
 #    --debug: print out processing details to STDERR
 
-PINDEL_RAW="results/pindel/pindel_out/pindel-raw.dat"
+PINDEL_RAW="$RESULTS_DIR/pindel/pindel_out/pindel-raw.dat"
 
 ARGS="\
 --pindel_config $PINDEL_CONFIG \

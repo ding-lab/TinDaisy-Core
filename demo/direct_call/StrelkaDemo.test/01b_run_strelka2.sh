@@ -1,5 +1,4 @@
-DATAD="/usr/local/somaticwrapper/testing/StrelkaDemo.dat"
-source project_config.sh $DATAD
+source project_data.sh 
 
 STEP="run_strelka2"
 

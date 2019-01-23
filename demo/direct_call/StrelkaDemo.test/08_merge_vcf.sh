@@ -1,5 +1,4 @@
-DATAD="/usr/local/somaticwrapper/testing/StrelkaDemo.dat"
-source project_config.sh $DATAD
+source project_data.sh
 
 STEP="merge_vcf"
 
@@ -13,10 +12,10 @@ STEP="merge_vcf"
 #     --bypass: Same as --bypass_merge
 #     --debug: print out processing details to STDERR
 
-STRELKA_SNV_VCF="results/vaf_length_depth_filters/strelka.snv.vcf"
-VARSCAN_SNV_VCF="results/vaf_length_depth_filters/varscan.snv.vcf"
-VARSCAN_INDEL_VCF="results/vaf_length_depth_filters/varscan.indel.vcf"
-PINDEL_VCF="results/vaf_length_depth_filters/pindel.indel.vcf"
+STRELKA_SNV_VCF="$RESULTS_DIR/vaf_length_depth_filters/strelka.snv.vcf"
+VARSCAN_SNV_VCF="$RESULTS_DIR/vaf_length_depth_filters/varscan.snv.vcf"
+VARSCAN_INDEL_VCF="$RESULTS_DIR/vaf_length_depth_filters/varscan.indel.vcf"
+PINDEL_VCF="$RESULTS_DIR/vaf_length_depth_filters/pindel.indel.vcf"
 
 ARGS="\
 --strelka_snv_vcf $STRELKA_SNV_VCF \
@@ -29,6 +28,6 @@ ARGS="\
 #--bypass \
 
 BIN="/usr/local/somaticwrapper/SomaticWrapper.pl"
-perl $BIN $ARGS $STEP
+echo perl $BIN $ARGS $STEP
 
-# Result: results/merged/merged.filtered.vcf
+# Result: $RESULTS_DIR/merged/merged.filtered.vcf

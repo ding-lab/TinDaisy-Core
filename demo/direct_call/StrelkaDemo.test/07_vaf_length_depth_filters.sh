@@ -1,5 +1,4 @@
-DATAD="/usr/local/somaticwrapper/testing/StrelkaDemo.dat"
-source project_config.sh $DATAD
+source project_data.sh
 
 STEP="vaf_length_depth_filters"
 
@@ -14,6 +13,18 @@ STEP="vaf_length_depth_filters"
 #     --bypass: skip all filters
 #     --debug: print out processing details to STDERR
 
+function test_exit_status {
+    # Evaluate return value for chain of pipes; see https://stackoverflow.com/questions/90418/exit-shell-script-based-on-process-exit-code
+    rcs=${PIPESTATUS[*]};
+    for rc in ${rcs}; do
+        if [[ $rc != 0 ]]; then
+            >&2 echo Fatal error.  Exiting.
+            exit $rc;
+        fi;
+    done
+}
+
+
 function run_vld_filter {
 # Usage: run_vld_filter INPUT_VCF OUTPUT_VCF XARG
 
@@ -27,18 +38,19 @@ $5 \
 
 BIN="/usr/local/somaticwrapper/SomaticWrapper.pl"
 perl $BIN $ARGS $STEP
+test_exit_status
 
 }
 
-INPUT_VCF="results/strelka2/strelka_out/results/variants/somatic.snvs.vcf.gz"
+INPUT_VCF="$RESULTS_DIR/strelka2/strelka_out/results/variants/somatic.snvs.vcf.gz"
 run_vld_filter $INPUT_VCF strelka.snv.vcf $STRELKA_VCF_FILTER_CONFIG
 
-INPUT_VCF="results/varscan/varscan_out/varscan.out.som_snv.vcf"
+INPUT_VCF="$RESULTS_DIR/varscan/varscan_out/varscan.out.som_snv.vcf"
 run_vld_filter $INPUT_VCF varscan.snv.vcf $VARSCAN_VCF_FILTER_CONFIG
 
-INPUT_VCF="results/varscan/varscan_out/varscan.out.som_indel.vcf" 
+INPUT_VCF="$RESULTS_DIR/varscan/varscan_out/varscan.out.som_indel.vcf" 
 run_vld_filter $INPUT_VCF varscan.indel.vcf $VARSCAN_VCF_FILTER_CONFIG --debug
 
-INPUT_VCF="results/pindel/filter_out/pindel-raw.dat.CvgVafStrand_pass.Homopolymer_pass.vcf"
+INPUT_VCF="$RESULTS_DIR/pindel/filter_out/pindel-raw.dat.CvgVafStrand_pass.Homopolymer_pass.vcf"
 run_vld_filter $INPUT_VCF pindel.indel.vcf $PINDEL_VCF_FILTER_CONFIG --bypass
 

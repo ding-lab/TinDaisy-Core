@@ -14,7 +14,7 @@
 
 # on Katmai, assume for StrelkaDemo run:
 # /data1:/diskmnt/Projects/cptac_downloads_4/TinDaisy-Core
-# /data2,/data3 - StrelkaDemo.dat directory = /home/mwyczalk_test/Projects/TinDaisy/TinDaisy-Core/demo/test_data/StrelkaDemo.dat
+# /data2,/data3,/data8 - StrelkaDemo.dat directory = /home/mwyczalk_test/Projects/TinDaisy/TinDaisy-Core/demo/test_data/StrelkaDemo.dat
 # /data4:/home/mwyczalk_test/Projects/TinDaisy/TinDaisy-Core/params
 # /data5,/data6 - StrelkaDemo.dat
 # /data7 is not mapped, not using VEP_CACHE
@@ -27,7 +27,7 @@ SAMPLE_NAME="StrelkaDemo"
 TUMOR_BAM="/data2/StrelkaDemoCase.T.bam"
 NORMAL_BAM="/data3/StrelkaDemoCase.N.bam"
 
-PARMD="/data4"
+PARAMD="/data4"
 STRELKA_CONFIG="$PARAMD/strelka.WES.ini"
 VARSCAN_CONFIG="$PARAMD/varscan.WES.ini"
 PINDEL_CONFIG="$PARAMD/pindel.WES.ini"
@@ -36,7 +36,9 @@ VARSCAN_VCF_FILTER_CONFIG="$PARAMD/vcf_filter_config-varscan.ini"
 PINDEL_VCF_FILTER_CONFIG="$PARAMD/vcf_filter_config-pindel.ini"
 AF_FILTER_CONFIG="$PARAMD/af_filter_config.ini"
 CLASS_FILTER_CONFIG="$PARAMD/classification_filter_config.ini"
-CENTROMERE_BED="$PARAMD/ucsc-centromere.GRCh37.bed"
+
+# Centromere is also found with reference
+CENTROMERE_BED="/data5/ucsc-centromere.GRCh37.bed"
 
 REFERENCE_FASTA="/data5/demo20.fa"
 DBSNP_DB="/data6/dbsnp-StrelkaDemo.noCOSMIC.vcf.gz"
@@ -44,5 +46,5 @@ DBSNP_DB="/data6/dbsnp-StrelkaDemo.noCOSMIC.vcf.gz"
 #VEP_CACHE_DIR="/data7"
 ASSEMBLY="GRCh37"
 
-RESULTS_DIR=$SAMPLE_NAME
+RESULTS_DIR="/data1/$SAMPLE_NAME"
 
