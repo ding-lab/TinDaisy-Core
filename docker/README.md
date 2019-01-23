@@ -16,4 +16,7 @@ which includes TinDaisy-Core
 Currently TinDaisy-Core has the following image:
 `cgc-images.sbgenomics.com/m_wyczalkowski/tindaisy-core:20181126`
 
+Images tagged as below circa 1/22/19 to indicate unstable development branch 
+`cgc-images.sbgenomics.com/m_wyczalkowski/tindaisy-core:dev`
+
 

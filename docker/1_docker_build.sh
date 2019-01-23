@@ -1,6 +1,9 @@
 # Currently built on denali
 
-#IMAGE="mwyczalkowski/somatic-wrapper:cwl"
-IMAGE="cgc-images.sbgenomics.com/m_wyczalkowski/tindaisy-core:20181126"
+# Build needs to take place in root directory of project
+cd ..
 
-docker build -t $IMAGE -f Dockerfile .
+#IMAGE="mwyczalkowski/somatic-wrapper:cwl"
+IMAGE="cgc-images.sbgenomics.com/m_wyczalkowski/tindaisy-core:dev"
+
+docker build -t $IMAGE -f docker/Dockerfile .

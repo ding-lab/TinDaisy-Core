@@ -156,26 +156,13 @@ RUN cd /usr/local \
     && tar -zxf mskcc-vcf2maf.tar.gz \
     && ln -s mskcc-vcf2maf-* mskcc-vcf2maf 
 
-# Note that this creates directory /usr/local/mskcc-vcf2maf-decbf60.
-# TODO: ln -s /usr/local/mskcc-vcf2maf-decbf60 /usr/local/mskcc-vcf2maf
-
 COPY vimrc /root/.vimrc
 
-# change the hash below to force clone
-# get it with git rev-parse HEAD, though it doesn't matter what it is as long as it changes
-# TinDaisy-Core will clone into directory named somaticwrapper, to minize difference with previous versions
-ENV latest_commit boo103
-RUN cd /usr/local \
-    && git clone https://github.com/ding-lab/TinDaisy-Core.git somaticwrapper
-
+# TinDaisy-Core is copied into directory named somaticwrapper, to minize difference with previous versions
+COPY . /usr/local/somaticwrapper
 WORKDIR /usr/local/somaticwrapper
 
 ENV PERL5LIB=/usr/local/somaticwrapper
 ENV LC_ALL="C"
-
-
-# following invocation will create common data dir in ./
-# docker run -v $PWD/data:/data -it breakpoint_surveyor
-#VOLUME ["/data"]
 
 CMD ["/bin/bash"]

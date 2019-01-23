@@ -3,6 +3,6 @@
 #
 # Password is authentication token obtained from https://cgc.sbgenomics.com/developer#token
 
-IMAGE="cgc-images.sbgenomics.com/m_wyczalkowski/tindaisy-core:20181126"
+IMAGE="cgc-images.sbgenomics.com/m_wyczalkowski/tindaisy-core:dev"
 docker push $IMAGE
 
