@@ -16,8 +16,8 @@ ARGS="\
 --results_dir $RESULTS_DIR \
 "
 
+
 BIN="/usr/local/somaticwrapper/SomaticWrapper.pl"
 perl $BIN $ARGS $STEP
 
-# Output (--is_strelka2): results/strelka/strelka_out/results/variants/somatic.snvs.vcf.gz
-# With Strelka1: results/strelka/strelka_out/results/passed.somatic.snvs.vcf
+# Output Strelka1: $RESULTS_DIR/strelka/strelka_out/results/passed.somatic.snvs.vcf
