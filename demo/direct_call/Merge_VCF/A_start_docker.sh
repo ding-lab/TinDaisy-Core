@@ -17,5 +17,5 @@ DATA2="$PROJECT_PATH/demo/direct_call/Merge_VCF/origdata"
 
 
 bash $PROJECT_PATH/src/start_docker.sh  -I $IMG $@ \
-    $DATA1 $DATA2 $DATA3 $DATA4 $DATA5 $DATA6 $DATA7
+    $DATA1 $DATA2 
 

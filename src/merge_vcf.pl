@@ -12,7 +12,7 @@
 # --bypass_merge - skips merge filter by retaining all reads
 # $bypass is an optional flag which if set will bypass the filter and retain all reaads
 
-# After merging, we filter to retain only those SNVs which are called by both strelka and varscan
+# After merging, we filter to retain only those SNVs which are called by 2/3 callers
 
 # CWL-specific changes
 # * Get rid of unused arguments

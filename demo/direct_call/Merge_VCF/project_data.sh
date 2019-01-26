@@ -16,9 +16,10 @@ SAMPLE_NAME="C3L-00004.Merge_VCF"
 RESULTS_DIR="/data1/$SAMPLE_NAME"
 
 
-STRELKA_SNV_VCF="/data2/vaf_length_depth_filters/strelka.snv.vcf"
-VARSCAN_SNV_VCF="/data2/vaf_length_depth_filters/varscan.snv.vcf"
-VARSCAN_INDEL_VCF="/data2/vaf_length_depth_filters/varscan.indel.vcf"
-PINDEL_VCF="/data2/vaf_length_depth_filters/pindel.indel.vcf"
-
+STRELKA_SNV_VCF="/data2/strelka_snv.vcf"
+STRELKA_INDEL_VCF="/data2/strelka_indel.vcf"
+VARSCAN_SNV_VCF="/data2/varscan_snv.vcf"
+VARSCAN_INDEL_VCF="/data2/varscan_indel.vcf"
+MUTECT_VCF="/data2/mutect_result.vcf"
+PINDEL_VCF="/data2/pindel.vcf"
 

@@ -24,7 +24,9 @@ Using output of TinDaisy CWL. **TODO** get run directory.  Output written here:
 Strelka1 was used for this run, and VAF/Length/Depth filters were not applied to the indel call.  Using 
 VCF from `run_strelka` directly:
 * `/diskmnt/Projects/cptac_downloads_4/TinDaisy/tindaisy-2018-11-26-202516.404/root/run_strelka/results/strelka/strelka_out/results/passed.somatic.indels.vcf`
+    -> copied here as strelka_indel.vcf
 * `/diskmnt/Projects/cptac_downloads_4/TinDaisy/tindaisy-2018-11-26-202516.404/root/run_strelka/results/strelka/strelka_out/results/passed.somatic.snvs.vcf`
+    -> copied here as strelka_snv.vcf
 
 ### Varscan
 

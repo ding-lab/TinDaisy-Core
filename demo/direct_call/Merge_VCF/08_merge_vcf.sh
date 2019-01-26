@@ -15,8 +15,10 @@ STEP="merge_vcf"
 
 ARGS="\
 --strelka_snv_vcf $STRELKA_SNV_VCF \
+--strelka_indel_vcf $STRELKA_INDEL_VCF \
 --varscan_snv_vcf $VARSCAN_SNV_VCF \
 --varscan_indel_vcf $VARSCAN_INDEL_VCF \
+--mutect_vcf $MUTECT_VCF \
 --pindel_vcf $PINDEL_VCF \
 --reference_fasta $REFERENCE_FASTA \
 --results_dir $RESULTS_DIR \
