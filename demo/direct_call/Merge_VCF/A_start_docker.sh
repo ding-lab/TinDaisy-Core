@@ -14,8 +14,9 @@ PROJECT_PATH="/home/mwyczalk_test/Projects/TinDaisy/TinDaisy-Core"
 
 DATA1=$OUTD
 DATA2="$PROJECT_PATH/demo/direct_call/Merge_VCF/origdata"
+DATA3="/diskmnt/Datasets/Reference"
 
 
 bash $PROJECT_PATH/src/start_docker.sh  -I $IMG $@ \
-    $DATA1 $DATA2 
+    $DATA1 $DATA2 $DATA3
 
