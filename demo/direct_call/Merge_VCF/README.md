@@ -78,3 +78,40 @@ Assume that this is a warning which can be ignored.
 As a result, adding the following flag in GATK CombineVariants, which turns error into a warning: 
 `-U ALLOW_SEQ_DICT_INCOMPATIBILITY`
 
+# Final testing
+
+To evaluate filter performance, compared "set=" values in merged.vcf and merged.filtered.vcf.  
+
+With `get_set.sh`: 
+    grep -v "^#" $1 | cut -f 8 | tr ';' '\n' | grep "set=" 
+
+To get count of all observed set= values:
+    get_set.sh merged.vcf | sort | uniq -c > merged.set
+    get_set.sh merged.filtered.vcf | sort | uniq -c > merged.filtered.set
+
+Then compare, using vimdiff or:
+    diff merged.set merged.filtered.set
+
+For C3L-00004, this was:
+    # diff merged.set merged.filtered.set
+    1,3d0
+    <    1082 set=mutect
+    <      20 set=pindel
+    <      11 set=sindel
+    6d2
+    <      92 set=strelka
+    10,11d5
+    <      36 set=varindel
+    <     539 set=varscan
+
+Indicating all single-caller variants were removed. The retained values of "set=" are:
+      4 set=sindel-varindel
+     11 set=sindel-varindel-pindel
+     29 set=strelka-mutect
+     17 set=strelka-varscan
+    144 set=strelka-varscan-mutect
+     94 set=varscan-mutect
+
+This is what we expect.
+
+Note, this will need to be repeated with Strelka2
