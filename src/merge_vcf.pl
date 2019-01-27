@@ -58,10 +58,9 @@ sub merge_vcf {
 #       --variant:pindel \${PINDEL_VCF_FILTER} 
 #       -genotypeMergeOptions PRIORITIZE -priority strelka,varscan,mutect,sindel,varindel,pindel
 
-# debug NOTE: mutect VCF results in the following error when merging:
-# SequenceDictionaryUtils - Input files /data2/mutect_result.vcf and reference have incompatible contigs. Please see https://software.broadinstitute.org/gatk/documentation/article?id=63for more information. Error details: The contig order in /data2/mutect_result.vcf and reference is not the same; to fix this please see: (https://www.broadinstitute.org/gatk/guide/article?id=1328),  which describes reordering contigs in BAM and VCF files..
-# The flag -U ALLOW_SEQ_DICT_INCOMPATIBILITY turns this error into a warning.  However, the source of this incompatiblity is not clear, since the references are
-# the same for all C3L-00004
+# Testing indicates there are issues merging Mutect VCF having to do with incompatible contigs: mutect is subset of reference.
+# Solution is to use flag below to turn errors into warnings; see discussion in README.md:
+# -U ALLOW_SEQ_DICT_INCOMPATIBILITY
 
     print OUT <<"EOF";
 #!/bin/bash

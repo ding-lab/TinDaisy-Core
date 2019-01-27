@@ -63,9 +63,18 @@ From `/home/mwyczalk_test/Projects/TinDaisy/mutect-tool/testing/cwl_call/C3L-000
 Reference used: /diskmnt/Datasets/Reference/GRCh38.d1.vd1/GRCh38.d1.vd1.fa
 from `/diskmnt/Projects/cptac_downloads_4/TinDaisy/tindaisy-2018-11-26-202516.404/root/run_varscan/cmd.log`
 
+## Conclusion
 
-## Progress
+Sorted contigs from both compared:
+* Mutect has 109 contigs
+  - Has: chr1, .. chrY, chr14_GL000009v2_random, chrUn_KN707963v1_decoy, etc
+* Reference has 2579 contigs
+  - Has e.g.: chr11_KI270721v1_random, chr11_KI270721v1_random, etc
+* Mutect is strict subset of Reference
 
-Adding the following flag in GATK CombineVariants turns error into a warning: `-U ALLOW_SEQ_DICT_INCOMPATIBILITY`
+It is not clear why mutect has these errors while other callers, which has no contigs listed, does not.
+Assume that this is a warning which can be ignored.
 
-TODO: track this down better
+As a result, adding the following flag in GATK CombineVariants, which turns error into a warning: 
+`-U ALLOW_SEQ_DICT_INCOMPATIBILITY`
+
