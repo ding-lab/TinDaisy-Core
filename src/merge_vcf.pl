@@ -58,6 +58,11 @@ sub merge_vcf {
 #       --variant:pindel \${PINDEL_VCF_FILTER} 
 #       -genotypeMergeOptions PRIORITIZE -priority strelka,varscan,mutect,sindel,varindel,pindel
 
+# debug NOTE: mutect VCF results in the following error when merging:
+# SequenceDictionaryUtils - Input files /data2/mutect_result.vcf and reference have incompatible contigs. Please see https://software.broadinstitute.org/gatk/documentation/article?id=63for more information. Error details: The contig order in /data2/mutect_result.vcf and reference is not the same; to fix this please see: (https://www.broadinstitute.org/gatk/guide/article?id=1328),  which describes reordering contigs in BAM and VCF files..
+# The flag -U ALLOW_SEQ_DICT_INCOMPATIBILITY turns this error into a warning.  However, the source of this incompatiblity is not clear, since the references are
+# the same for all C3L-00004
+
     print OUT <<"EOF";
 #!/bin/bash
 export JAVA_OPTS=\"-Xmx2g\"
@@ -68,7 +73,8 @@ export JAVA_OPTS=\"-Xmx2g\"
     --variant:varindel $varscan_indel_vcf \\
     --variant:sindel $strelka_indel_vcf \\
     --variant:pindel $pindel_vcf \\
-    -genotypeMergeOptions PRIORITIZE -priority strelka,varscan,mutect,sindel,varindel,pindel
+    -genotypeMergeOptions PRIORITIZE -priority strelka,varscan,mutect,sindel,varindel,pindel \\
+    -U ALLOW_SEQ_DICT_INCOMPATIBILITY
 
 # Evaluate return value see https://stackoverflow.com/questions/90418/exit-shell-script-based-on-process-exit-code
 rc=\$?

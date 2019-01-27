@@ -30,12 +30,42 @@ VCF from `run_strelka` directly:
 
 ### Varscan
 
-* /diskmnt/Projects/cptac_downloads_4/TinDaisy/tindaisy-2018-11-26-202516.404/root/varscan_indel_vaf_length_depth_filters/results/vaf_length_depth_filters/filtered.vcf
+* `/diskmnt/Projects/cptac_downloads_4/TinDaisy/tindaisy-2018-11-26-202516.404/root/varscan_indel_vaf_length_depth_filters/results/vaf_length_depth_filters/filtered.vcf`
     -> copied here as varscan_indel.vcf
-* /diskmnt/Projects/cptac_downloads_4/TinDaisy/tindaisy-2018-11-26-202516.404/root/varscan_snv_vaf_length_depth_filters/results/vaf_length_depth_filters/filtered.vcf
+* `/diskmnt/Projects/cptac_downloads_4/TinDaisy/tindaisy-2018-11-26-202516.404/root/varscan_snv_vaf_length_depth_filters/results/vaf_length_depth_filters/filtered.vcf`
     -> copied here as varscan_snv.vcf
 
 ### Pindel
-* /diskmnt/Projects/cptac_downloads_4/TinDaisy/tindaisy-2018-11-26-202516.404/root/pindel_vaf_length_depth_filters/results/vaf_length_depth_filters/filtered.vcf
+* `/diskmnt/Projects/cptac_downloads_4/TinDaisy/tindaisy-2018-11-26-202516.404/root/pindel_vaf_length_depth_filters/results/vaf_length_depth_filters/filtered.vcf`
     -> copied here as pindel.vcf
 
+# Debugging
+
+## Reference problems
+
+File `README.reference_error` has error output from mutect.  At issue is a reference mismatch in mutect VCF:
+
+```
+MESSAGE: Input files /data2/mutect_result.vcf and reference have incompatible contigs. ...
+...
+/data2/mutect_result.vcf contigs = [chrUn_GL000219v1, chrUn_KI270746v1,...
+reference contigs = [chr1, chr2, chr3,...
+```
+
+### Mutect
+
+Reference used: /diskmnt/Datasets/Reference/GRCh38.d1.vd1/GRCh38.d1.vd1.fa
+All references have same md5sum
+From `/home/mwyczalk_test/Projects/TinDaisy/mutect-tool/testing/cwl_call/C3L-00004.katmai.yaml`
+
+
+### TinDaisy run
+Reference used: /diskmnt/Datasets/Reference/GRCh38.d1.vd1/GRCh38.d1.vd1.fa
+from `/diskmnt/Projects/cptac_downloads_4/TinDaisy/tindaisy-2018-11-26-202516.404/root/run_varscan/cmd.log`
+
+
+## Progress
+
+Adding the following flag in GATK CombineVariants turns error into a warning: `-U ALLOW_SEQ_DICT_INCOMPATIBILITY`
+
+TODO: track this down better

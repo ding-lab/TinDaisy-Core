@@ -12,20 +12,31 @@ STEP="merge_vcf"
 #     --bypass: Same as --bypass_merge
 #     --debug: print out processing details to STDERR
 
-
+TEST=$MUTECT_VCF
 ARGS="\
---strelka_snv_vcf $STRELKA_SNV_VCF \
---strelka_indel_vcf $STRELKA_INDEL_VCF \
---varscan_snv_vcf $VARSCAN_SNV_VCF \
---varscan_indel_vcf $VARSCAN_INDEL_VCF \
---mutect_vcf $MUTECT_VCF \
---pindel_vcf $PINDEL_VCF \
+--strelka_snv_vcf $TEST \
+--strelka_indel_vcf $TEST \
+--varscan_snv_vcf $TEST \
+--varscan_indel_vcf $TEST \
+--mutect_vcf $TEST \
+--pindel_vcf $TEST \
 --reference_fasta $REFERENCE_FASTA \
 --results_dir $RESULTS_DIR \
 "
+
+#ARGS="\
+#--strelka_snv_vcf $STRELKA_SNV_VCF \
+#--strelka_indel_vcf $STRELKA_INDEL_VCF \
+#--varscan_snv_vcf $VARSCAN_SNV_VCF \
+#--varscan_indel_vcf $VARSCAN_INDEL_VCF \
+#--mutect_vcf $MUTECT_VCF \
+#--pindel_vcf $PINDEL_VCF \
+#--reference_fasta $REFERENCE_FASTA \
+#--results_dir $RESULTS_DIR \
+#"
 #--bypass \
 
 BIN="/usr/local/somaticwrapper/SomaticWrapper.pl"
-echo perl $BIN $ARGS $STEP
+perl $BIN $ARGS $STEP
 
 # Result: $RESULTS_DIR/merged/merged.filtered.vcf

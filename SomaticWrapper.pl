@@ -223,7 +223,7 @@ GetOptions(
     'pindel_raw=s' => \$pindel_raw,
 
     'strelka_snv_vcf=s' => \$strelka_snv_vcf,
-    'strelka_indel_vcf=s' => \$strelka_snv_vcf,
+    'strelka_indel_vcf=s' => \$strelka_indel_vcf,
     'varscan_snv_vcf=s' => \$varscan_snv_vcf,
     'varscan_indel_vcf=s' => \$varscan_indel_vcf,
     'mutect_vcf=s' => \$mutect_vcf,
