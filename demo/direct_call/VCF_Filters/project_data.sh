@@ -12,16 +12,19 @@ RESULTS_DIR="/data1/$SAMPLE_NAME"
 # /data2: Location of test data.  Should be mapped even if using canned data
 # /data3: path to reference
 # /data4: mapped volume of variant caller and filter parameters
+# /data5: Location of strelka2 VCF
 
 # on Katmai
 # /data1:/diskmnt/Projects/cptac_downloads_4/TinDaisy-Core
 # /data2: /home/mwyczalk_test/Projects/TinDaisy/TinDaisy-Core/demo/direct_call/Merge_VCF/origdata
 # /data3: /diskmnt/Datasets/Reference
 # /data4: /home/mwyczalk_test/Projects/TinDaisy/TinDaisy-Core/params
+# /data5: /diskmnt/Projects/cptac_downloads_4/TinDaisy-Core/C3L-00004.demo/strelka2/strelka_out/results/variants
 
-# These are the same as Merge_VCF/project_data.sh
-STRELKA_SNV_VCF="/data2/strelka_snv.vcf"
-STRELKA_INDEL_VCF="/data2/strelka_indel.vcf"
+# These are the same as Merge_VCF/project_data.sh, with the exception of STRELKA_*.  These are large and 
+# are used ad hoc from another run
+STRELKA_SNV_VCF="/data5/somatic.snvs.vcf.gz"
+STRELKA_INDEL_VCF="/data5/somatic.indels.vcf.gz"
 VARSCAN_SNV_VCF="/data2/varscan_snv.vcf"
 VARSCAN_INDEL_VCF="/data2/varscan_indel.vcf"
 MUTECT_VCF="/data2/mutect_result.vcf"
@@ -39,5 +42,3 @@ MUTECT_VCF_FILTER_CONFIG="$PARAMD/vcf_filter_config-mutect.ini"
 AF_FILTER_CONFIG="$PARAMD/af_filter_config.ini"
 CLASS_FILTER_CONFIG="$PARAMD/classification_filter_config.ini"
 
-# installation directory of 
-PROJECT_ROOT="/usr/local/somaticwrapper"
