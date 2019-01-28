@@ -77,6 +77,10 @@ class TumorNormal_VAF(ConfigFileFilter):
         return self.name
 
 # TODO: provide support for strelka2 indels
+# * review Strelka1 read depth
+# * review strelka2 snv read depth - same as strelka1?
+# * review strelka2 indel read depth.  Look into DP, DP2 fields
+
     def get_readcounts_strelka(self, VCF_record, VCF_data):
         # pass VCF_record only to extract info (like ALT and is_snp) not available in VCF_data
 
