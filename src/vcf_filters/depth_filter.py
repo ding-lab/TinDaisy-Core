@@ -4,15 +4,16 @@ import sys
 # Filter VCF files according to tumor, normal read depth
 #
 # the following parameters are required:
-# * min_depth
+# * min_depth_tumor
+# * min_depth_normal
 # * tumor_name
 # * normal_name
 # * caller caller - specifies tool used for variant call. 'strelka', 'varscan', 'pindel', 'mutect'
 #
-# These may be specified on the command line (e.g., --min_depth 10) or in
+# These may be specified on the command line (e.g., --min_depth_normal 10) or in
 # configuration file, as specified by --config config.ini  Sample contents of config file:
 #   [read_depth]
-#   min_depth = 10
+#   min_depth_normal = 10
 #
 # optional command line parameters
 # --debug
@@ -30,7 +31,8 @@ class DepthFilter(ConfigFileFilter):
     @classmethod
     def customize_parser(self, parser):
 
-        parser.add_argument('--min_depth', type=int, help='Retain sites where read depth for tumor and normal > given value')
+        parser.add_argument('--min_depth_tumor', type=int, help='Retain sites where read depth for tumor > given value')
+        parser.add_argument('--min_depth_normal', type=int, help='Retain sites where read depth for normal > given value')
         parser.add_argument('--tumor_name', type=str, help='Tumor sample name in VCF')
         parser.add_argument('--normal_name', type=str, help='Normal sample name in VCF')
         parser.add_argument('--caller', type=str, choices=['strelka', 'varscan', 'pindel', 'mutect'], help='Caller type')
@@ -50,7 +52,8 @@ class DepthFilter(ConfigFileFilter):
         config = self.read_config_file(args.config)
 
         self.set_args(config, args, "caller")
-        self.set_args(config, args, "min_depth", arg_type="int")
+        self.set_args(config, args, "min_depth_tumor", arg_type="int")
+        self.set_args(config, args, "min_depth_normal", arg_type="int")
         self.set_args(config, args, "tumor_name")
         self.set_args(config, args, "normal_name")
 
@@ -58,7 +61,7 @@ class DepthFilter(ConfigFileFilter):
         if self.bypass:
             self.__doc__ = "Bypassing Depth filter, retaining all reads. Caller = %s" % (self.caller)
         else:
-            self.__doc__ = "Retain calls where read depth in tumor and normal > %d. Caller = %s " % (self.min_depth, self.caller)
+            self.__doc__ = "Retain calls where read depth in tumor > %s and normal > %d. Caller = %s " % (self.min_depth_tumor, self.min_depth_normal, self.caller)
 
     def filter_name(self):
         return self.name
@@ -122,10 +125,10 @@ class DepthFilter(ConfigFileFilter):
             if (self.debug): eprint("** Bypassing %s filter, retaining read **" % self.name )
             return
 
-        if depth_N < self.min_depth:
+        if depth_N < self.min_depth_normal:
             if (self.debug): eprint("** FAIL NORMAL min_depth = %d ** " % depth_N)
             return "depth_N: %d" % depth_N
-        if depth_T < self.min_depth:
+        if depth_T < self.min_depth_tumor:
             if (self.debug): eprint("** FAIL TUMOR min_depth = %d ** " % depth_T)
             return "depth_T: %d" % depth_T
 
