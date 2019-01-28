@@ -13,6 +13,11 @@
 
 # Combined filter executes vaf, length, and depth filters in a unix pipeline:
 #   python vaf_filter ... | python length_filter ... | python depth_filter ... > output.vcf
+#
+# All calls which do not have PASS filter are rejected
+
+# TODO; rework this script to make passing arguments to separate filters easier.
+
 
 if [ "$#" -lt 3 ]; then
     >&2 echo Error: Wrong number of arguments
@@ -66,9 +71,9 @@ MAIN_FILTER="vcf_filter.py --no-filtered" # Assuming in path
 # Common configuration file is used for all filters
 CONFIG="--config $CONFIG_FN"
 
-# Arguments to VAF filter
+# Arguments to VAF filter.  Adding --pass_only to exclude non-passed calls in strelka2
 VAF_FILTER="vcf_filter.py --no-filtered --local-script vaf_filter.py"  # filter module
-VAF_FILTER_ARGS="vaf $VAF_ARG $CONFIG " 
+VAF_FILTER_ARGS="vaf $VAF_ARG $CONFIG --pass_only" 
 
 # Arguments to length filter
 LENGTH_FILTER="vcf_filter.py --no-filtered --local-script length_filter.py"  # filter module
@@ -80,13 +85,16 @@ DEPTH_FILTER_ARGS="read_depth $DEPTH_ARG $CONFIG "
 
 if [ $OUT == '-' ]; then
 
-$VAF_FILTER $VCF $VAF_FILTER_ARGS | $LENGTH_FILTER - $LENGTH_FILTER_ARGS | $DEPTH_FILTER - $DEPTH_FILTER_ARGS 
+CMD="$VAF_FILTER $VCF $VAF_FILTER_ARGS | $LENGTH_FILTER - $LENGTH_FILTER_ARGS | $DEPTH_FILTER - $DEPTH_FILTER_ARGS "
 
 else
 
-$VAF_FILTER $VCF $VAF_FILTER_ARGS | $LENGTH_FILTER - $LENGTH_FILTER_ARGS | $DEPTH_FILTER - $DEPTH_FILTER_ARGS > $OUT
+CMD="$VAF_FILTER $VCF $VAF_FILTER_ARGS | $LENGTH_FILTER - $LENGTH_FILTER_ARGS | $DEPTH_FILTER - $DEPTH_FILTER_ARGS > $OUT"
 
 fi
+
+>&2 echo Running: $CMD
+eval $CMD
 
 # Evaluate return value for chain of pipes; see https://stackoverflow.com/questions/90418/exit-shell-script-based-on-process-exit-code
 rcs=${PIPESTATUS[*]};

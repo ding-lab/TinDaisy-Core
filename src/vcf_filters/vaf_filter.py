@@ -20,6 +20,7 @@ import sys
 # --debug
 # --config config.ini
 # --bypass
+# --pass_only
 
 class TumorNormal_VAF(ConfigFileFilter):
     'Filter variant sites by tumor and normal VAF (variant allele frequency)'
@@ -40,6 +41,7 @@ class TumorNormal_VAF(ConfigFileFilter):
         parser.add_argument('--config', type=str, help='Optional configuration file')
         parser.add_argument('--debug', action="store_true", default=False, help='Print debugging information to stderr')
         parser.add_argument('--bypass', action="store_true", default=False, help='Bypass filter by retaining all variants')
+        parser.add_argument('--pass_only', action="store_true", default=False, help='Retain only variants with passing FILTER values')
         
     def __init__(self, args):
         # These will not be set from config file (though could be)
@@ -57,21 +59,29 @@ class TumorNormal_VAF(ConfigFileFilter):
         self.set_args(config, args, "max_vaf_germline", arg_type="float")
         self.set_args(config, args, "tumor_name")
         self.set_args(config, args, "normal_name")
+        self.set_args(config, args, "pass_only")
 
         # below becomes Description field in VCF
         if self.bypass:
-            self.__doc__ = "Bypassing Tumor Normal VAF filter, retaining all reads.  Caller = %s" % (self.caller)
+            if self.pass_only:
+                self.__doc__ = "Bypassing Tumor Normal VAF filter, retaining all variants where FILTER=PASS.  Caller = %s" % (self.caller)
+            else:
+                self.__doc__ = "Bypassing Tumor Normal VAF filter, retaining all variants.  Caller = %s" % (self.caller)
         else:
-            self.__doc__ = "Retain calls where normal VAF <= %f and tumor VAF >= %f.  Caller = %s " % (self.max_vaf_germline, self.min_vaf_somatic, self.caller)
+            if self.pass_only:
+                self.__doc__ = "Retain variants where normal VAF <= %f, tumor VAF >= %f, and FILTER=PASS.  Caller = %s " % (self.max_vaf_germline, self.min_vaf_somatic, self.caller)
+            else:
+                self.__doc__ = "Retain variants where normal VAF <= %f and tumor VAF >= %f.  Caller = %s " % (self.max_vaf_germline, self.min_vaf_somatic, self.caller)
             
     def filter_name(self):
         return self.name
 
+# TODO: provide support for strelka2 indels
     def get_readcounts_strelka(self, VCF_record, VCF_data):
         # pass VCF_record only to extract info (like ALT and is_snp) not available in VCF_data
 
         if not VCF_record.is_snp:
-            raise Exception( "Only SNP calls supported for Strelka: " + VCF_record)
+            raise Exception( "Only SNP calls supported for Strelka: " + str(VCF_record))
         # read counts, as dictionary. e.g. {'A': 0, 'C': 0, 'T': 0, 'G': 25}
         tier=0   
         rc = {'A':VCF_data.AU[tier], 'C':VCF_data.CU[tier], 'G':VCF_data.GU[tier], 'T':VCF_data.TU[tier]}
@@ -81,7 +91,7 @@ class TumorNormal_VAF(ConfigFileFilter):
         #   Note we convert vcf.model._Substitution to its string representation to use as key
         rc_var = sum( [rc[v] for v in map(str, VCF_record.ALT) ] )
         rc_tot = sum(rc.values())
-        vaf = float(rc_var) / float(rc_tot)
+        vaf = float(rc_var) / float(rc_tot) # Deal with rc_tot == 0
         if self.debug:
             eprint("rc: %s, rc_var: %f, rc_tot: %f, vaf: %f" % (str(rc), rc_var, rc_tot, vaf))
         return vaf
@@ -137,7 +147,7 @@ class TumorNormal_VAF(ConfigFileFilter):
         elif variant_caller == 'merged':
             # Caller is contained in 'set' INFO field
             merged_caller = VCF_record.INFO['set'][0]
-            # TODO: finish and test this thoroughly.  In a merged line with set=A-B-C, call readcounts with "A"
+            # TODO: It would be better to parse merged_caller to primary_caller, where merged set=A-B-C corresponds to primary_caller "A"
             if merged_caller == 'strelka':
                 return self.get_readcounts_strelka(VCF_record, data)
             elif merged_caller == 'varscan':
@@ -154,10 +164,20 @@ class TumorNormal_VAF(ConfigFileFilter):
             raise Exception( "Unknown caller: " + variant_caller)
 
     def __call__(self, record):
+    # filter to exclude any calls except PASS
+    # This is from /home/mwyczalk_test/Projects/TinDaisy/mutect-tool/src/mutect-tool.py
+        # specific code borrowed from https://pyvcf.readthedocs.io/en/latest/_modules/vcf/model.html#_Record
+        if record.FILTER is not None and len(record.FILTER) != 0:
+            msg = "record.FILTER = %s" % str(record.FILTER)
+            if self.debug: 
+                eprint(msg)
+            if self.pass_only:
+                return msg
+
         vaf_N = self.get_vaf(record, self.normal_name)
         vaf_T = self.get_vaf(record, self.tumor_name)
 
-        if (self.debug):
+        if self.debug:
             eprint("Normal, Tumor vaf: %f, %f" % (vaf_N, vaf_T))
 
         if self.bypass:
