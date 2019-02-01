@@ -84,16 +84,17 @@ class TumorNormal_VAF(ConfigFileFilter):
         rc = {'A':VCF_data.AU[tier], 'C':VCF_data.CU[tier], 'G':VCF_data.GU[tier], 'T':VCF_data.TU[tier]}
 
         # Sum read counts across all variants. In some cases, multiple variants are separated by , in ALT field
-        # Implicitly, only SNV supported here.
         #   Note we convert vcf.model._Substitution to its string representation to use as key
         rc_var = sum( [rc[v] for v in map(str, VCF_record.ALT) ] )
-        rc_tot = sum(rc.values())
+        #  per definition here https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md#somatic-variant-allele-frequencies
+        # VCF denominator is ref + alt counts
+        rc_tot = rc_var + rc[str(VCF_record.REF)]
         if rc_tot == 0:
             vaf = 0.
         else:
             vaf = float(rc_var) / float(rc_tot) # Deal with rc_tot == 0
         if self.debug:
-            eprint("rc: %s, rc_var: %d, rc_tot: %d, vaf: %f" % (str(rc), rc_var, rc_tot, vaf))
+            eprint("REF=%s, ALT=%s, rc: %s, rc_var: %d, rc_tot: %d, vaf: %f" % (VCF_record.REF, VCF_record.ALT, str(rc), rc_var, rc_tot, vaf))
         return vaf
 
     def get_indel_vaf_strelka(self, VCF_record, VCF_data):
@@ -101,13 +102,13 @@ class TumorNormal_VAF(ConfigFileFilter):
         # based on : https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md#somatic-variant-allele-frequencies
         tier=0  # corresponds to "tier1" 
         rc = VCF_data.TAR[tier]  # RefCounts
-        ac = VCF_data.TAR[tier]  # AltCounts
-        if rc_tot == 0:
+        ac = VCF_data.TIR[tier]  # AltCounts
+        if rc + ac == 0:
             vaf = 0.
         else:
             vaf = float(ac) / float(ac + rc) # Deal with rc_tot == 0
         if self.debug:
-            eprint("RefCounts: %d, AltCounts: %d, vaf: %f" % (rc, ac, vaf))
+            eprint("REF=%s, ALT=%s, RefCounts: %d, AltCounts: %d, vaf: %f" % (VCF_record.REF, VCF_record.ALT, rc, ac, vaf))
         return vaf 
 
     def get_vaf_strelka(self, VCF_record, VCF_data):
