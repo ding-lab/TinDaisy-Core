@@ -1,0 +1,7 @@
+TODO:
+continue testing strelka2 snv and indel vcf
+ * make sure that it is giving back correct results.  Should we be summing across all alternative alleles?
+ * make sure that Strelka1 VAF calculations work for both SNV and indel
+
+* Implement indel test
+* continue with testing of entire pipeline
