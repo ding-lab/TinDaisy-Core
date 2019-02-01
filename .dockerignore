@@ -1,0 +1,10 @@
+# Want this to be more or less similar to .gitignore
+.*.swp
+*.pyc
+runtime
+COSMIC_credentials.dat
+StrelkaDemo.results/
+results/
+tmp/
+**/Homo_sapiens_assembly19.COST16011_region.fa
+*.idx
