@@ -6,5 +6,5 @@ source project_data.sh
 #bash run_vaf_filter.sh $STRELKA_SNV_VCF $STRELKA_VCF_FILTER_CONFIG $@ 
 
 echo Testing: removing header
-bash run_vaf_filter.sh $STRELKA_SNV_VCF $STRELKA_VCF_FILTER_CONFIG $@ | grep -v "^#"
+bash run_vaf_filter.sh $STRELKA2_SNV_VCF $STRELKA_VCF_FILTER_CONFIG $@ | grep -v "^#"
 
