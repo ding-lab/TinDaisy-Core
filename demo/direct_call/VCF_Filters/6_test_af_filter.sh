@@ -1,5 +1,5 @@
 # Testing AF filter using pyvcf's exensible vcf_filter.py framework
-source common_config.sh
+export PYTHONPATH="../../src/vcf_filters:$PYTHONPATH"
 
 # This will break on a standard demo run with the following:
 #   Exception: CSQ field MAX_AF not found in /data/StrelkaDemo-results/vep/output.unfiltered.vcf

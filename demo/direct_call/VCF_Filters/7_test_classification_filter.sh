@@ -1,5 +1,5 @@
 # Testing depth filter using pyvcf's exensible vcf_filter.py framework
-source common_config.sh
+export PYTHONPATH="../../src/vcf_filters:$PYTHONPATH"
 
 # This won't work because C3N-01649 data not distributed with this project
 

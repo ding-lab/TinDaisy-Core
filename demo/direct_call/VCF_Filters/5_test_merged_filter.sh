@@ -1,6 +1,6 @@
 # Testing merge filter wrapper
 # run_merged_filter.sh exists as a wrapper script so it can easily be called from workflow
-source common_config.sh
+export PYTHONPATH="../../src/vcf_filters:$PYTHONPATH"
 
 VCF="/data/StrelkaDemo-results/merged/merged.vcf"
 

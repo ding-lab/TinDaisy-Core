@@ -7,3 +7,9 @@ Testing here refers to validating that the code runs with no errors generated.
 Output (stdout, stderr, and files generated)  must be examined by eye.  No
 automated testing of results is performed.
 
+Combined filter consists of VAF, Length, and Read Depth filters run as a pipeline.
+Directories exist for the three individual filters individually, and then as a combined pipeline,
+in each of the directories; these are tested separately on example data from each caller
+
+Filter tests starting with 5_ need to be updated, possibly with new paths.  Note that ../Merge_VCF has
+code for testing merge filtering
