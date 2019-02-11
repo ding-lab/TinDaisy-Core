@@ -1,6 +1,7 @@
-# Run Strelka
+# Run Strelka2
 
-    # Strelka 2 results: $results_dir/strelka2/strelka_out/results/variants/somatic.snvs.vcf.gz
+    # Strelka 2 SNV results: $results_dir/strelka2/strelka_out/results/variants/somatic.snvs.vcf.gz
+    # Strelka 2 Indel results: $results_dir/strelka2/strelka_out/results/variants/somatic.indels.vcf.gz (confirm this)
 
 # Optional arg manta_vcf is explained in best practice here; https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md#configuration
 # implemented only for is_strelka2

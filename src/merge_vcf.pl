@@ -1,18 +1,16 @@
 # Combine VCF files from several callers into one
 # The following files are combined:
-# * strelka SNV
-# * strelka indel (sindel)
-# * varscan SNV
-# * varscan indel (aka varindel)
-# * mutect SNV 
-# * pindel indel
-
-# Note, Song uses vaf_filter_v1.3.pl to implement 2/3 filtering strategy
+# * strelka SNV         ("strelka")
+# * strelka indel       ("sindel")
+# * varscan SNV         ("varscan")
+# * varscan indel       ("varindel")
+# * mutect SNV          ("mutect")
+# * pindel indel        ("pindel")
 
 # --bypass_merge - skips merge filter by retaining all reads
-# $bypass is an optional flag which if set will bypass the filter and retain all reaads
+# $bypass is an optional flag which if set will bypass the filter and retain all reads
 
-# After merging, we filter to retain only those SNVs which are called by 2/3 callers
+# After merging, all VCFs together, we filter to retain only those variants which are called by 2/3 callers
 
 # CWL-specific changes
 # * Get rid of unused arguments
