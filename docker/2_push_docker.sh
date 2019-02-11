@@ -3,6 +3,14 @@
 #
 # Password is authentication token obtained from https://cgc.sbgenomics.com/developer#token
 
-IMAGE="cgc-images.sbgenomics.com/m_wyczalkowski/tindaisy-core:dev"
-docker push $IMAGE
+source docker_image.sh
+
+if [ $NO_PUSH ]; then
+    >&2 echo docker push not permitted
+    exit 1
+fi
+
+CMD="docker push $DOCKER_IMAGE"
+echo $CMD
+eval $CMD
 
