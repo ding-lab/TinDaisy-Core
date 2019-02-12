@@ -49,7 +49,8 @@ RUN cd /usr/local/ \
 RUN pip install \
     pyvcf \
     pysam \
-    numpy
+    numpy \
+    pytest
 
 # Perl packags
 RUN cpanm XML::XPath
