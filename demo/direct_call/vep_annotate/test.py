@@ -5,14 +5,14 @@ import subprocess
 import pytest
 
 
-INPUT_VCF = '/usr/local/somaticwrapper/demo/vep_annotate/data/input.vcf'
-EXPECTED_VCF = '/usr/local/somaticwrapper/demo/vep_annotate/data/output_vep.vcf'
-EXPECTED_VCF_PICK_ORDER = '/usr/local/somaticwrapper/demo/vep_annotate/data/output_vep_pick_order.vcf'
-RESULTS_DIRECTORY = '/usr/local/somaticwrapper/demo/vep_annotate/results'
-REFERENCE_FASTA = '/usr/local/somaticwrapper/demo/vep_annotate/data/demo20.fa'
-OUTPUT_VCF = '/usr/local/somaticwrapper/demo/vep_annotate/results/vep/output_vep.vcf'
+INPUT_VCF = '/usr/local/somaticwrapper/demo/direct_call/vep_annotate/data/input.vcf'
+EXPECTED_VCF = '/usr/local/somaticwrapper/demo/direct_call/vep_annotate/data/output_vep.vcf'
+EXPECTED_VCF_PICK_ORDER = '/usr/local/somaticwrapper/demo/direct_call/vep_annotate/data/output_vep_pick_order.vcf'
+RESULTS_DIRECTORY = '/usr/local/somaticwrapper/demo/direct_call/vep_annotate/results'
+REFERENCE_FASTA = '/usr/local/somaticwrapper/demo/direct_call/vep_annotate/data/demo20.fa'
+OUTPUT_VCF = '/usr/local/somaticwrapper/demo/direct_call/vep_annotate/results/vep/output_vep.vcf'
 
-NONSENSE_VCF = '/usr/local/somaticwrapper/demo/vep_annotate/data/nonsense.grch37.small.vcf'
+NONSENSE_VCF = '/usr/local/somaticwrapper/demo/direct_call/vep_annotate/data/nonsense.grch37.small.vcf'
 
 #make results directory
 try:
