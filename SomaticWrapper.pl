@@ -123,6 +123,7 @@ vep_annotate:
     --assembly s: either "GRCh37" or "GRCh38", used to identify cache file. Optional if not ambigous 
     --vep_cache_version s: Cache version, e.g. '90', used to identify cache file.  Optional if not ambiguous
     --vep_cache_gz: is a file ending in .tar.gz containing VEP cache tarball
+    --vep_opts s: string with additional arguments to vep_annotate tool.
     --vep_cache_dir s: location of VEP cache directory
         VEP Cache logic:
         * If vep_cache_dir is defined, it indicates location of VEP cache 
@@ -164,6 +165,7 @@ my $reference_fasta;
 my $results_dir = ".";  
 my $vep_cache_dir;
 my $vep_cache_gz;
+my $vep_opts;
 my $bypass_vaf;    # Boolean
 my $bypass_length;    # Boolean
 my $bypass_depth;    # Boolean
@@ -212,6 +214,7 @@ GetOptions(
     'results_dir=s' => \$results_dir,
     'vep_cache_dir=s' => \$vep_cache_dir,
     'vep_cache_gz=s' => \$vep_cache_gz,
+    'vep_opts=s' => \$vep_opts,
     'strelka_config=s' => \$strelka_config,
     'varscan_config=s' => \$varscan_config,
     'pindel_config=s' => \$pindel_config,
@@ -228,7 +231,6 @@ GetOptions(
     'varscan_indel_vcf=s' => \$varscan_indel_vcf,
     'mutect_vcf=s' => \$mutect_vcf,
     'pindel_vcf=s' => \$pindel_vcf,
-
     'input_vcf=s' => \$input_vcf,
     'output_vcf=s' => \$output_vcf,
     'caller=s' => \$caller,
@@ -353,7 +355,7 @@ if (($step_number eq '1') || ($step_number eq 'run_strelka')) {
     die("input_vcf undefined \n") unless $input_vcf;
     die("reference_fasta undefined \n") unless $reference_fasta;
     my $preserve_cache_gz = 0;  # get rid of uncompressed cache directory if expanded from .tar.gz
-    vep_annotate($results_dir, $job_files_dir, $reference_fasta, $assembly, $vep_cache_version, $vep_cache_dir, $vep_cache_gz, $preserve_cache_gz, $input_vcf);
+    vep_annotate($results_dir, $job_files_dir, $reference_fasta, $assembly, $vep_cache_version, $vep_cache_dir, $vep_cache_gz, $preserve_cache_gz, $input_vcf, $vep_opts);
 
 } elsif ($step_number eq 'vep_filter') {
     die("input_vcf undefined \n") unless $input_vcf;

@@ -50,6 +50,7 @@ sub vep_annotate {
     my $cache_gz = shift;  
     my $preserve_cache_gz = shift;  
     my $input_vcf = shift;  
+    my $vep_opts = shift;  
 
     # assembly and cache_version may be blank; if so, not passed on command line to vep
     # We now require all output to be vcf format (not vep), so that VCF filtering can take place 
@@ -60,6 +61,13 @@ sub vep_annotate {
     my $config_fn = "$filter_results/vep.merged.input";
 
     my $use_vep_db = 1;
+
+    # set default vep_opts to --flag-pick
+    if (!defined $vep_opts) {
+        $vep_opts = "--flag_pick";
+    }
+    # remove " from vep_opts if present
+    $vep_opts =~ s/\"//g;
 
     # if $cache_dir is defined, confirm it exists
     # else if $cache_dir is a .tar.gz file, extract its contents to ./vep-cache
@@ -90,7 +98,7 @@ sub vep_annotate {
         "merged.vep",                               # Module
         $input_vcf,                # VCF (input)
         $vep_output_fn,           # output
-        $cache_dir, $reference, $assembly, $cache_version, $use_vep_db, 0);
+        $cache_dir, $reference, $assembly, $cache_version, $use_vep_db, 0, $vep_opts);
 
     my $runfn = "$job_files_dir/j10_vep.sh";
     print STDERR "Writing to $runfn\n";
@@ -142,6 +150,7 @@ sub write_vep_input {
     my $cache_version = shift;   
     my $use_vep_db = shift;  # 1 for testing/demo, 0 for production
     my $output_is_vep = shift;  # True if vep_output is "vep"
+    my $vep_opts = shift;  # additional args to be based into vep annotater
 
     # assembly and cache_version are optional; if value is empty, not written to config file
     my $output_vep_int = 0;
@@ -159,7 +168,7 @@ $module.cachedir = $cache_dir
 $module.reffasta = $reference
 $module.usedb = $use_vep_db  
 $module.output_vep = $output_vep_int
-$module.vep_opts = --flag_pick 
+$module.vep_opts = $vep_opts
 EOF
 
     # optional parameters
