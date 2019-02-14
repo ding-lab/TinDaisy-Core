@@ -17,7 +17,8 @@
 #        VEP Cache logic:
 #        * If cache_dir is defined, it indicates location of VEP cache 
 #        * if cache_dir is not defined, and cache_gz is defined, extract cache_gz contents into "./vep-cache" and use VEP cache
-#        * if neither cache_dir nor cache_gz defined, error.  vcf_2_maf does not support online cache lookups
+#        * if neither cache_dir nor cache_gz defined, cannot proceed since vcf_2_maf does not support online cache lookups
+#          Return with a warning and no results
 
 # if $cache_gz file exists, then copy it to $cache_dir="./vep-cache" and extract it there
 #   (assuming it is a .tar.gz version of VEP cache; this is typically used for a cwl setup where arbitrary paths are not accessible)
@@ -63,7 +64,9 @@ sub vcf_2_maf {
         my $rc = system ("tar -zxf $cache_gz --directory $cache_dir");
         die("Exiting ($rc).\n") if $rc != 0;
     } else {
-        die "--cache_dir or --cache_gz must be defined\n";
+        warn "WARNING: neither --cache_dir nor --cache_gz defined\n";
+        warn "Exiting.\n";
+        exit 0;
     }
 
 
