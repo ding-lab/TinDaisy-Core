@@ -4,8 +4,8 @@
 
 # Note that we do not want to push this image.  Policy is to make all public images on katmai
 #DOCKER_IMAGE="cgc-images.sbgenomics.com/m_wyczalkowski/tindaisy-core:mutect"
-DOCKER_IMAGE="m_wyczalkowski/tindaisy-core:mutect-shiso"
+DOCKER_IMAGE="m_wyczalkowski/tindaisy-core:mutect"
 
 # If variable below evaluates to true, prevent `docker push`
-NO_PUSH=1
+NO_PUSH=0
 
