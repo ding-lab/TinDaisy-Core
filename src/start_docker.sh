@@ -3,36 +3,43 @@
 # Matthew Wyczalkowski <m.wyczalkowski@wustl.edu>
 # https://dinglab.wustl.edu/
 
-# Start docker container in regular and/or MGI environment, and optionally map given paths to /data1, /data2, ...
-# Usage: start_docker.sh [options] [data_path_1 data_path_2 ...]
-#
-# -M: run in MGI environment
-# -L LOGD_H: Log directory on host.  Logs are written to $LOGD_H/log/*.[err|out]
-# -d: dry run.  print out docker statement but do not execute
-# -I DOCKER_IMAGE: Specify docker image.  Default: cgc-images.sbgenomics.com/m_wyczalkowski/tindaisy-core:latest
-# -c CMD: run given command.  default: bash
-# -H mntH : additional host mount, may be a file or directory, relative path OK.  If defined, -C must also be defined
-# -C mntC : additional container command.  mntH will be mapped to mntC
-# -m DOCKERMAP : path to docker map file.  Contains 1 or more lines like PATH_H:PATH_C which define additional volume mapping
-# -g LSF_GROUP: LSF group to start in.  MGI mode only
+read -r -d '' USAGE <<'EOF'
+Start docker container in regular and/or MGI environment, and optionally map given paths to /data1, /data2, ...
+Usage: start_docker.sh [options] [ data_path_1 [ data_path_2 ...] ]
 
-# data_path will map to /data in container
-#
-# Details about LSF_GROUP: https://github.com/ding-lab/importGDC.CPTAC3
-# See also https://confluence.gsc.wustl.edu/pages/viewpage.action?pageId=27592450
-# 
+-h: show help
+-M: run in MGI environment
+-L LOGD_H: Log directory on host.  Logs are written to $LOGD_H/log/*.[err|out]
+-d: dry run.  print out docker statement but do not execute
+-I DOCKER_IMAGE: Specify docker image.  Required.
+-c CMD: run given command.  default: bash
+-H mntH : additional host mount, may be a file or directory, relative path OK.  If defined, -C must also be defined
+-C mntC : additional container command.  mntH will be mapped to mntC
+-m DOCKERMAP : path to docker map file.  Contains 1 or more lines like PATH_H:PATH_C which define additional volume mapping
+-g LSF_GROUP: LSF group to start in.  MGI mode only
+
+data_path_N will map to /data_N in container
+
+Details about LSF_GROUP: https://github.com/ding-lab/importGDC.CPTAC3
+See also https://confluence.gsc.wustl.edu/pages/viewpage.action?pageId=27592450
+EOF
 
 SCRIPT=$(basename $0)
 
-DOCKER_IMAGE="cgc-images.sbgenomics.com/m_wyczalkowski/tindaisy-core:latest"
+# No longer defaults
+# DOCKER_IMAGE="cgc-images.sbgenomics.com/m_wyczalkowski/tindaisy-core:latest"
 
 LSFQ="-q research-hpc"  # MGI LSF queue.  
 LSF_ARGS=""
 DOCKER_CMD="/bin/bash"
 INTERACTIVE=1
 
-while getopts ":MdI:c:H:C:L:m:g:" opt; do
+while getopts "h:MdI:c:H:C:L:m:g:" opt; do
   case $opt in
+    h)
+      echo "$USAGE"
+      exit 0
+      ;;
     M)  
       MGI=1
       >&2 echo MGI Mode
@@ -65,15 +72,23 @@ while getopts ":MdI:c:H:C:L:m:g:" opt; do
       ;;
     \?)
       >&2 echo "$SCRIPT: ERROR. Invalid option: -$OPTARG" >&2
+      >&2 echo "$USAGE"
       exit 1
       ;;
     :)
       >&2 echo "$SCRIPT: ERROR. Option -$OPTARG requires an argument." >&2
+      >&2 echo "$USAGE"
       exit 1
       ;;
   esac
 done
 shift $((OPTIND-1))
+
+if [ -z $DOCKER_IMAGE ]; then
+    >&2 echo Error: Docker image \(-I\} not specified
+    >&2 echo "$USAGE"
+    exit 1
+fi
 
 D=1
 DATMAP=""
