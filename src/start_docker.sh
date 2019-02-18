@@ -85,7 +85,7 @@ done
 shift $((OPTIND-1))
 
 if [ -z $DOCKER_IMAGE ]; then
-    >&2 echo Error: Docker image \(-I\} not specified
+    >&2 echo Error: Docker image \(-I\) not specified
     >&2 echo "$USAGE"
     exit 1
 fi

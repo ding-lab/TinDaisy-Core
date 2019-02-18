@@ -65,9 +65,12 @@ sub vep_annotate {
     # set default vep_opts to --flag-pick
     if (!defined $vep_opts) {
         $vep_opts = "--flag_pick";
+    } else {
+        $vep_opts = "$vep_opts --flag_pick";
     }
-    # remove " from vep_opts if present
+    # remove " and ' from vep_opts if present
     $vep_opts =~ s/\"//g;
+    $vep_opts =~ s/\'//g;
 
     # if $cache_dir is defined, confirm it exists
     # else if $cache_dir is a .tar.gz file, extract its contents to ./vep-cache
