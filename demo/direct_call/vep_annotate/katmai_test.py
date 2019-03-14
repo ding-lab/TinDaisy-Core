@@ -26,10 +26,10 @@ def test_nonsense_vcf():
     cli_args += ['--results_dir', RESULTS_DIRECTORY,
             '--assembly', KATMAI_ASSEMBLY,
             '--input_vcf', KATMAI_NONSENSE_VCF,
-            '--reference_fasta', KATMAI_REFERENCE_FASTA, # shouldn't matter for online lookup
+            '--reference_fasta', KATMAI_REFERENCE_FASTA,
             '--vep_cache_version', KATMAI_CACHE_VERSION,
             '--vep_cache_gz', KATMAI_CACHE_GZ,
-            '--vep_opts', '"--pick --pick_order tsl"',
+            '--vep_opts', '"--pick --pick_order tsl,biotype,rank,canonical,ccds,length"',
             'vep_annotate']
     r = subprocess.check_output(cli_args).decode('utf-8')
 
