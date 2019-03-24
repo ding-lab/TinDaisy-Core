@@ -1,5 +1,5 @@
 Scripts here are to be run just once to set up common files (like reference,
-etc), which can be used by multiple docker containers.  Scripts must be run from within the docker container.
+etc), which can be used by multiple docker containers.  Some scripts must be run from within the docker container.
 See [SomaticWrapper.CPTAC3.b1](https://github.com/ding-lab/SomaticWrapper.CPTAC3.b1) for details.
 
 All data is written to the `/image` directory (defined in SomaticWrapper.workflow by
@@ -43,15 +43,4 @@ Test this on docker
 Also, set up docker run script so `/image` and `/import` volumes can be mounted `rw`
 
 Next, describe these steps in the SomaticWrapper.CPTAC3.b1 script
-
-
-# To run with test Strelka directory
-
-1. Run scripts in `S_StrelkaDemoSetup`
-2. 
-
-# To run arbitrary data
-
-1. set up image
-2. create config file (example)
 

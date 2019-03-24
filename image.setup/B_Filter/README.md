@@ -5,11 +5,11 @@
 3. Remove from dbsnp database those mutations which exist in COSMIC database
 
 This stage will generally need to be run just once to generate the database.
-Note that this is build specific (GRCh37 implemented), and the dbSNP and COSMIC databases have regular updates.
 
-Note also that need to get credentials to download the COSMIC database.  Username and password
-are stored in the file `COSMIC_credentials.dat` (run `2_download_cosmic.sh` to create sample
-file.  This file is not tracked in the repository.)
+`dbSnP_b150` has scripts for the b150 release of dbSnP (GRCh37 and GRCh38).
+It was was found to have an incorrect chromosome naming scheme (chromosome names like `1` 
+instead of `chr1`).
 
-Also need to create short test VCF for Strelka test data.  This done for development to create
-data which is distributed with this project.  This step is not generally run again.
+GRCh38.d1.vd1 generates dbSnP-COSMIC file for use with the GRCh38.d1.vd1 reference,
+which is standard for GDC, with automated renaming of chromosomes based on tables downloaded
+from NBCI.
