@@ -1,9 +1,6 @@
 # Output is to pindel/pindel_out
 
-# CWL addition:
-# the `grep ChrID` step which was in the parse_pindel step (see SomaticWrapper.v2.Combined.pdf) has
-# been moved to the run_pindel step
-# The output of this step is then 
+# The output of this step is 
 # * output port: pindel/pindel_out/pindel-raw.dat
 
 # After running Pindel, pull out all reads from pindel raw output with the label ChrID
@@ -41,38 +38,11 @@ sub run_pindel {
         $no_delete_temp = 0; # avoid empty variables
     }
 
-    my $centromere_arg = "";
-    die "Error: Tumor BAM $IN_bam_T does not exist\n" if (! -e $IN_bam_T);
-    die "Error: Tumor BAM $IN_bam_T is empty\n" if (! -s $IN_bam_T);
-    die "Error: Normal BAM $IN_bam_N does not exist\n" if (! -e $IN_bam_N);
-    die "Error: Normal BAM $IN_bam_N is empty\n" if (! -s $IN_bam_N);
-    if ($f_centromere) {
-        die "Error: Centromere BED file $f_centromere does not exist\n" if (! -e $f_centromere);
-        $centromere_arg = "-J $f_centromere";
-        print STDERR "Using centromere BED $f_centromere\n";
-    } else {
-        print STDERR "No centromere BED\n";
-    }
-
 
     my $step_output_fn = "pindel-raw.dat";
 
     my $pindel_out = "$results_dir/pindel/pindel_out";
     system("mkdir -p $pindel_out");
-
-    my $config_fn = "$pindel_out/pindel.config";
-    print STDERR "Writing to $config_fn\n";
-    open(OUT, ">$config_fn") or die $!;
-    print OUT <<"EOF";
-$IN_bam_T\t500\tTUMOR
-$IN_bam_N\t500\tNORMAL
-EOF
-
-
-    my $pindel_args = " -T 4 -m 6 -w 1 ";
-    if ($pindel_chrom) {
-        $pindel_args = " $pindel_args -c $pindel_chrom ";
-    }
 
 # This step the original invocation from parse_pindel
 #echo Collecting results in $pindel_results
@@ -86,7 +56,11 @@ EOF
     print OUT <<"EOF";
 #!/bin/bash
 
-$SWpaths::pindel_dir/pindel -f $REF -i $config_fn -o $pindel_out/pindel $pindel_args $centromere_arg
+# $SWpaths::pindel_dir/pindel -f $REF -i $config_fn -o $pindel_out/pindel $pindel_args $centromere_arg
+
+bash run_pindel_parallel.sh $IN_bam_T $IN_BAM_N $REF
+
+
 rc=\$?
 if [[ \$rc != 0 ]]; then
     >&2 echo Fatal error \$rc: \$!.  Exiting.
