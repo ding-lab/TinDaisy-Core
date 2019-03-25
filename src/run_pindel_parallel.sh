@@ -29,6 +29,50 @@ In parallel mode, will use GNU parallel to loop across all chromosomes (as defin
 Output logs written to OUTD/logs/pindel.$CHR.log
 EOF
 
+function test_exit_status {
+    # Evaluate return value for chain of pipes; see https://stackoverflow.com/questions/90418/exit-shell-script-based-on-process-exit-code
+    rcs=${PIPESTATUS[*]};
+    for rc in ${rcs}; do
+        if [[ $rc != 0 ]]; then
+            NOW=$(date)
+            >&2 echo [ $NOW ] $SCRIPT Fatal ERROR.  Exiting.
+            exit $rc;
+        fi;
+    done
+}
+
+function confirm {
+    FN=$1
+    WARN=$2
+    NOW=$(date)
+    if [ ! -s $FN ]; then
+        if [ -z $WARN ]; then
+            >&2 echo [ $NOW ] ERROR: $FN does not exist or is empty
+            exit 1
+        else
+            >&2 echo [ $NOW ] WARNING: $FN does not exist or is empty.  Continuing
+        fi
+    fi
+}
+
+# Evaluate given command CMD either as dry run or for real with
+#     CMD="tabix -p vcf $OUT"
+#     run_cmd "$CMD"
+function run_cmd {
+    CMD=$@
+
+    NOW=$(date)
+    if [ "$DRYRUN" ]; then
+        >&2 echo [ $NOW ] Dryrun: $CMD
+    else
+        >&2 echo [ $NOW ] Running: $CMD
+        eval $CMD
+        test_exit_status
+        NOW=$(date)
+        >&2 echo [ $NOW ] Completed successfully
+    fi
+}
+
 # Background on `parallel` and details about blocking / semaphores here:
 #    O. Tange (2011): GNU Parallel - The Command-Line Power Tool,
 #    ;login: The USENIX Magazine, February 2011:42-47.
@@ -109,7 +153,7 @@ NORMAL_BAM=$2;  confirm $NORMAL_BAM
 REF=$3;         confirm $REF
 
 if [ $CHRLIST_ARG ]; then
-    if [ $CHRLIST == "NONE" ]; then
+    if [ "$CHRLIST" == "NONE" ]; then
         CHRLIST=""
     else
         CHRLIST=$CHRLIST_ARG
@@ -123,54 +167,13 @@ TMPD="$OUTD/tmp"
 mkdir -p $TMPD
 
 
-function test_exit_status {
-    # Evaluate return value for chain of pipes; see https://stackoverflow.com/questions/90418/exit-shell-script-based-on-process-exit-code
-    rcs=${PIPESTATUS[*]};
-    for rc in ${rcs}; do
-        if [[ $rc != 0 ]]; then
-            NOW=$(date)
-            >&2 echo [ $NOW ] $SCRIPT Fatal ERROR.  Exiting.
-            exit $rc;
-        fi;
-    done
-}
-
-function confirm {
-    FN=$1
-    WARN=$2
-    NOW=$(date)
-    if [ ! -s $FN ]; then
-        if [ -z $WARN ]; then
-            >&2 echo [ $NOW ] ERROR: $FN does not exist or is empty
-            exit 1
-        else
-            >&2 echo [ $NOW ] WARNING: $FN does not exist or is empty.  Continuing
-        fi
-    fi
-}
-
-# Evaluate given command CMD either as dry run or for real with
-#     CMD="tabix -p vcf $OUT"
-#     run_cmd "$CMD"
-function run_cmd {
-    CMD=$1
-
-    NOW=$(date)
-    if [ "$DRYRUN" == "d" ]; then
-        >&2 echo [ $NOW ] Dryrun: $CMD
-    else
-        >&2 echo [ $NOW ] Running: $CMD
-        eval $CMD
-        test_exit_status
-        NOW=$(date)
-        >&2 echo [ $NOW ] Completed successfully
-    fi
-}
 
 # Simple direct processing of BAM
 function run_pindel_serial {
-    CMD="$PINDEL_BIN -f $REF -i $CONFIG_FN -o $OUTD $PINDEL_ARGS $CENTROMERE_ARG"
-    run_cmd $CMD
+    OUT="$OUTD/pindel"
+    PINOUT="$OUTD/pindel.out.gz"
+    CMD="$PINDEL_BIN -f $REF -i $CONFIG_FN -o $OUT $PINDEL_ARGS $CENTROMERE_ARG | gzip > $PINOUT"
+    run_cmd "$CMD"
 }
 
 # Using semaphores to block as described here: https://www.usenix.org/system/files/login/articles/105438-Tange.pdf
@@ -195,11 +198,13 @@ function run_pindel_parallel {
     >&2 echo . 	  Temp directory: $TMPD
     while read CHR; do
 
-        JOBLOG="$LOGD/$SAMPLE_NAME.$CHR.get_uniq.log"
+        JOBLOG="$LOGD/pindel.$CHR.log"
 
-        CMD="$PINDEL_BIN -c $CHR -f $REF -i $CONFIG_FN -o $OUTD $PINDEL_ARGS $CENTROMERE_ARG"
+        OUT="$OUTD/pindel_${CHR}"
+        PINOUT="$OUTD/pindel_${CHR}.out.gz"
+        CMD="$PINDEL_BIN -c $CHR -f $REF -i $CONFIG_FN -o $OUT $PINDEL_ARGS $CENTROMERE_ARG | gzip > $PINOUT"
 
-        CMDP="parallel --semaphore -j$PARALLEL_JOBS --id $MYID --joblog $JOBLOG --tmpdir $TMPD \"$CMD\" "
+        CMDP="parallel --no-notice --semaphore -j$PARALLEL_JOBS --id $MYID --joblog $JOBLOG --tmpdir $TMPD \"$CMD\" "
         >&2 echo Launching $CHR
         if [ $DRYRUN ]; then
             >&2 echo Dryrun: $CMDP
@@ -220,7 +225,7 @@ function run_pindel_parallel {
 
     # this will wait until all jobs completed
     if [ ! $DRYRUN ]; then
-        parallel --semaphore --wait --id $MYID
+        parallel --no-notice --semaphore --wait --id $MYID
         test_exit_status
     fi
 
@@ -233,13 +238,13 @@ if [ -z $CONFIG_FN ]; then
 
     CONFIG_FN="$OUTD/pindel.config"
     >&2 echo Writing configuration file $CONFIG_FN
+    TAB="$(printf '\t')"
     cat << EOF > $CONFIG_FN
-$TUMOR_BAM\t500\tTUMOR
-$NORMAL_BAM\t500\tNORMAL
+$TUMOR_BAM${TAB}500${TAB}TUMOR
+$NORMAL_BAM${TAB}500${TAB}NORMAL
 EOF
 
 fi
-
 
 if [ ! $CHRLIST ]; then
 # no chrom list
@@ -250,4 +255,5 @@ else
     run_pindel_parallel 
 fi
 
->&2 echo SUCCESS
+NOW=$(date)
+>&2 echo [ $NOW ] SUCCESS
