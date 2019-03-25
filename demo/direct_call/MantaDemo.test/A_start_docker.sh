@@ -1,4 +1,4 @@
-IMG="cgc-images.sbgenomics.com/m_wyczalkowski/tindaisy-core:dev"
+IMG="mwyczalkowski/tindaisy-core:mutect"
 
 
 CONFIG="project_data.sh"

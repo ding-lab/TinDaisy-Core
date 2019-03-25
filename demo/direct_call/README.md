@@ -8,3 +8,6 @@ vcf_filters.test
 * C3N-00004.GRCh38 - Runs all steps for C3L-00004 dataset
 
 Most Recent: C3N-00004.GRCh38
+
+Note that in some cases the image being used is outdated.  See docker/docker_image.sh for 
+most current version
