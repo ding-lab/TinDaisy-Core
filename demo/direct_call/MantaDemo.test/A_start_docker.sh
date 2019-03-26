@@ -1,4 +1,4 @@
-IMG="mwyczalkowski/tindaisy-core:mutect"
+IMG="mwyczalkowski/tindaisy-core:pindel-chrom"
 
 
 CONFIG="project_data.sh"
