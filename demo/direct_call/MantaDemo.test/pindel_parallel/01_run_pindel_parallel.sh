@@ -9,4 +9,7 @@ BIN="/usr/local/somaticwrapper/src/run_pindel_parallel.sh"
 # --results_dir $RESULTS_DIR \
 
 
+# adding `ulimit -c 0` to script to prevent large coredumps during testing
+ulimit -c 0
+
 bash /usr/local/somaticwrapper/src/run_pindel_parallel.sh $@ $TUMOR_BAM $NORMAL_BAM $REFERENCE_FASTA
