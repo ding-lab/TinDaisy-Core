@@ -24,6 +24,7 @@ Options:
 -A PINDEL_ARGS: Arguments passed to Pindel.  Default: "-T 4 -m 6 -w 1"
 -b PINDEL: path to pindel executable.  Default: /usr/local/pindel/pindel
 -C CONFIG_FN: Config file to use instead of one created here
+-O: write pindel output to STDOUT.  By default, it is written to OUTD/pindel_out.gz
 
 In parallel mode, will use GNU parallel to loop across all chromosomes (as defined by CHRLIST), script will block until all jobs completed.
 Output logs written to OUTD/logs/pindel.$CHR.log
@@ -87,7 +88,7 @@ PINDEL_ARGS=" -T 4 -m 6 -w 1"
 PINDEL_BIN="/usr/local/pindel/pindel"
 
 # http://wiki.bash-hackers.org/howto/getopts_tutorial
-while getopts ":hdc:1fj:o:J:A:b:C:" opt; do
+while getopts ":hdc:1fj:o:J:A:b:C:O" opt; do
   case $opt in
     h)
       echo "$USAGE"
@@ -115,7 +116,7 @@ while getopts ":hdc:1fj:o:J:A:b:C:" opt; do
       ;;
     J) 
       confirm $OPTARG
-      CENTROMERE_ARG="-f $OPTARG"
+      CENTROMERE_ARG="-J $OPTARG"
       ;;
     A) 
       PINDEL_ARGS="$OPTARG"
@@ -126,6 +127,9 @@ while getopts ":hdc:1fj:o:J:A:b:C:" opt; do
     C) 
       CONFIG_FN="$OPTARG"
       confirm $CONFIG_FN
+      ;;
+    O) 
+      WRITE_STDOUT=1
       ;;
     \?)
       >&2 echo "$SCRIPT: ERROR: Invalid option: -$OPTARG"
@@ -172,7 +176,10 @@ mkdir -p $TMPD
 function run_pindel_serial {
     OUT="$OUTD/pindel"
     PINOUT="$OUTD/pindel.out.gz"
-    CMD="$PINDEL_BIN -f $REF -i $CONFIG_FN -o $OUT $PINDEL_ARGS $CENTROMERE_ARG | gzip > $PINOUT"
+    CMD="$PINDEL_BIN -f $REF -i $CONFIG_FN -o $OUT $PINDEL_ARGS $CENTROMERE_ARG "
+    if [ -z $WRITE_STDOUT ]; then  # write output to gzipped file, unless requested otherwise
+        CMD="$CMD | gzip > $PINOUT"
+    fi
     run_cmd "$CMD"
 }
 
@@ -202,7 +209,10 @@ function run_pindel_parallel {
 
         OUT="$OUTD/pindel_${CHR}"
         PINOUT="$OUTD/pindel_${CHR}.out.gz"
-        CMD="$PINDEL_BIN -c $CHR -f $REF -i $CONFIG_FN -o $OUT $PINDEL_ARGS $CENTROMERE_ARG | gzip > $PINOUT"
+        CMD="$PINDEL_BIN -c $CHR -f $REF -i $CONFIG_FN -o $OUT $PINDEL_ARGS $CENTROMERE_ARG "
+        if [ -z $WRITE_STDOUT ]; then  # write output to gzipped file, unless requested otherwise
+            CMD="$CMD | gzip > $PINOUT"
+        fi
 
         CMDP="parallel --no-notice --semaphore -j$PARALLEL_JOBS --id $MYID --joblog $JOBLOG --tmpdir $TMPD \"$CMD\" "
         >&2 echo Launching $CHR

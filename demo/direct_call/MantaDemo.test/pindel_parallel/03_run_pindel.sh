@@ -21,10 +21,15 @@ ARGS="\
 --reference_fasta $REFERENCE_FASTA \
 --centromere_bed $CENTROMERE_BED \
 --results_dir $RESULTS_DIR \
+--num_parallel 12 \
+--no_delete_temp \
+--chrlist $CHRLIST \
 "  
-# --chrlist $CHRLIST
 #    --num_parallel n: number of chromosomes to process at a time.  Default 4
-#--no_delete_temp \
+
+# adding `ulimit -c 0` to script to prevent large coredumps during testing
+ulimit -c 0
+
 
 BIN="/usr/local/somaticwrapper/SomaticWrapper.pl"
 perl $BIN $ARGS $STEP

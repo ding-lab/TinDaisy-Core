@@ -55,18 +55,18 @@ sub run_pindel {
         print STDERR "No centromere BED\n";
     }
 
-    if ($num_processes) {
-        $args += "$args -j $num_processes";
+    if ($num_parallel) {
+        $args = "$args -j $num_parallel";
     } 
 
     if ($chrlist) {     # rely on run_pindel_parallel for file existence check
-        $args += "$args -c $chrlist";
+        $args = "$args -c $chrlist";
     } 
 
 
     my $pindel_out = "$results_dir/pindel/pindel_out";
     system("mkdir -p $pindel_out");
-    $args="$args -o $pindel_out"
+    $args="$args -o $pindel_out";
 
     my $step_output_fn = "pindel-raw.dat";
 
@@ -78,7 +78,7 @@ sub run_pindel {
 
 # $SWpaths::pindel_dir/pindel -f $REF -i $config_fn -o $pindel_out/pindel $pindel_args $centromere_arg
 
-bash run_pindel_parallel.sh $args $IN_bam_T $IN_BAM_N $REF
+bash $SWpaths::sw_dir/src/run_pindel_parallel.sh $args $IN_bam_T $IN_bam_N $REF
 
 rc=\$?
 if [[ \$rc != 0 ]]; then
@@ -88,7 +88,7 @@ fi
 
 cd $pindel_out 
 # pulling all output together 
-grep ChrID pindel_\*D pindel_\*SI pindel_\*INV pindel_\*TD > $step_output_fn
+grep -h ChrID pindel_\*D pindel_\*SI pindel_\*INV pindel_\*TD > $step_output_fn
 rc=\$?
 if [[ \$rc != 0 ]]; then
     >&2 echo Fatal error \$rc: \$!.  Exiting.
@@ -102,7 +102,8 @@ if [[ $no_delete_temp == 1 ]]; then
 else
 
 >&2 echo Deleting intermediate pindel files
-rm -f pindel_*
+rm -f pindel_* pindel*out.gz
+rm -rf tmp
 
 fi
 
@@ -112,8 +113,6 @@ echo Final result written to $pindel_out/$step_output_fn
 EOF
 
     close OUT;
-
-die("Die before running");
 
     my $cmd = "bash < $runfn\n";
     print STDERR "Executing:\n $cmd \n";
