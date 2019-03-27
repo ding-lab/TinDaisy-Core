@@ -5,6 +5,7 @@
 
 # Optional arg manta_vcf is explained in best practice here; https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md#configuration
 # implemented only for is_strelka2
+# num_parallel defines number of jobs to run at once, default is 4
 sub run_strelka2 {
     my $IN_bam_T = shift;
     my $IN_bam_N = shift;
@@ -13,6 +14,7 @@ sub run_strelka2 {
     my $ref = shift;
     my $strelka_config = shift;
     my $manta_vcf = shift;    
+    my $num_parallel = shift;
 
     print STDERR "Running Strelka 2\n";
     $strelka_bin="$SWpaths::strelka2_dir/bin/configureStrelkaSomaticWorkflow.py";
@@ -44,8 +46,48 @@ sub run_strelka2 {
     open(OUT, ">$runfn") or die $!;
 
 #
-# strelka 2
+# strelka 2.  FYI:
 #
+# Usage: runWorkflow.py [options]
+# 
+# Version: 2.9.10-4-gd737744
+# 
+# Options:
+#   --version             show program's version number and exit
+#   -h, --help            show this help message and exit
+#   -m MODE, --mode=MODE  select run mode (local|sge)
+#   -q QUEUE, --queue=QUEUE
+#                         specify scheduler queue name
+#   -j JOBS, --jobs=JOBS  number of jobs, must be an integer or 'unlimited'
+#                         (default: Estimate total cores on this node for local
+#                         mode, 128 for sge mode)
+#   -g MEMGB, --memGb=MEMGB
+#                         gigabytes of memory available to run workflow -- only
+#                         meaningful in local mode, must be an integer (default:
+#                         Estimate the total memory for this node for local
+#                         mode, 'unlimited' for sge mode)
+#   -d, --dryRun          dryRun workflow code without actually running command-
+#                         tasks
+#   --quiet               Don't write any log output to stderr (but still write
+#                         to workspace/pyflow.data/logs/pyflow_log.txt)
+# 
+#   development debug options:
+#     --rescore           Reset task list to re-run hypothesis generation and
+#                         scoring without resetting graph generation.
+# 
+#   extended portability options (should not be needed by most users):
+#     --maxTaskRuntime=hh:mm:ss
+#                         Specify scheduler max runtime per task, argument is
+#                         provided to the 'h_rt' resource limit if using SGE (no
+#                         default)
+
+    $run_args = "";
+    if ($num_parallel) {
+        $run_args = "-j $num_parallel";
+    } else {
+        $run_args = "-j 4";
+    }
+
     print STDERR "Executing Strelka 2\n";
     print OUT <<"EOF";
 #!/bin/bash
@@ -64,7 +106,7 @@ fi
 
 cd $strelka_out
 ls
-./runWorkflow.py -m local -j 8 -g 4
+./runWorkflow.py -m local -g 4 $run_args
 rc=\$?
 if [[ \$rc != 0 ]]; then
     >&2 echo Fatal error \$rc: \$!.  Exiting.
