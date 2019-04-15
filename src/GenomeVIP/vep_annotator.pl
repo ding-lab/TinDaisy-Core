@@ -45,7 +45,7 @@ if ($paras{'usedb'}) {
 
     # Cannot use --max_af and other AF-related args here
  
-    $cmd = "perl $paras{'vep_cmd'} $opts --database --port 3337 --buffer_size 10000  --fork 4 --format vcf $vcf_flag -i $paras{'vcf'} -o $paras{'output'} --force_overwrite  --fasta $paras{'reffasta'}";
+    $cmd = "/usr/bin/perl $paras{'vep_cmd'} $opts --database --port 3337 --buffer_size 10000  --fork 4 --format vcf $vcf_flag -i $paras{'vcf'} -o $paras{'output'} --force_overwrite  --fasta $paras{'reffasta'}";
 
     print STDERR $cmd . "\n";
     my $errcode = system($cmd); 
@@ -55,7 +55,7 @@ if ($paras{'usedb'}) {
     print STDERR ("VEP Cache mode\n");
     if (exists($paras{'cache_version'})) { $opts = "$opts --cache_version $paras{'cache_version'}" }
     my $opts = "$opts --af --max_af --af_1kg --af_esp --af_gnomad";
-    $cmd = "perl $paras{'vep_cmd'} $opts --buffer_size 10000 --offline --cache --dir $paras{'cachedir'} --fork 4 --format vcf $vcf_flag -i $paras{'vcf'} -o $paras{'output'} --force_overwrite  --fasta $paras{'reffasta'}";
+    $cmd = "/usr/bin/perl $paras{'vep_cmd'} $opts --buffer_size 10000 --offline --cache --dir $paras{'cachedir'} --fork 4 --format vcf $vcf_flag -i $paras{'vcf'} -o $paras{'output'} --force_overwrite  --fasta $paras{'reffasta'}";
     print STDERR $cmd . "\n";
     my $errcode = system($cmd); 
     die ("Error executing: $cmd \n $! \n") if ($errcode);
