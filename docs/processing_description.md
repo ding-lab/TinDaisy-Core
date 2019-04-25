@@ -23,36 +23,9 @@ Filters applied (details in VCF output)
 * Retain exonic calls
 * Exclude calls which are in dbSnP but not in COSMIC
 
+Details can be found [TinDaisy-Core](https://github.com/ding-lab/TinDaisy-Core)
+
 TinDaisy and TinDaisy-Core were developed from [SomaticWrapper](https://github.com/ding-lab/somaticwrapper) and [GenomeVIP](https://genomevip.readthedocs.io/).  
-
-
-## Installation
-
-See [TinDaisy](https://github.com/ding-lab/TinDaisy) for details
-about installation and usage of TinDaisy-Core in a CWL environment
-
-## Implementation
-
-Below are visual outlines of the TinDaisy-Core workflow.  Note that the actual workflow is implemented at CWL level
-in [TinDaisy](https://github.com/ding-lab/TinDaisy).
-
-### CWL
-The current CWL implementation is visualized below using [Rabix Composer](http://docs.rabix.io/rabix-composer-home)
-
-![TinDaisy CWL implementation](docs/TinDaisy.CWL.png)
-
-### Details
-The following illustrations provide details about the internals of each TinDaisy-Core step.  Note that the Overall
-figure is outdated, as it does not incorporate Mutect SNV calls.
-
-#### Overall
-![Somatic Wrapper Overview](docs/Overall.png)
-#### Strelka2
-![Somatic Wrapper Strelka Details](docs/Strelka_Detail.png)
-#### Varscan
-![Somatic Wrapper Varscan Details](docs/Varscan_Detail.png)
-#### Pindel
-![Somatic Wrapper Pindel Details](docs/Pindel_Detail.png)
 
 ## Authors
 
