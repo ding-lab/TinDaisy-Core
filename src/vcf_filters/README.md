@@ -101,7 +101,7 @@ the following Variant Classifications are retained:
     In_Frame_Del
 ```
 Based on [vcf2maf.pl](https://github.com/mskcc/vcf2maf/blob/master/vcf2maf.pl#L917), this corresponds to the following values of the VEP CSQ "Consequences" field
-(see `retained_classification.txt` details): 
+(see `docs/retained_classification.txt` details): 
 ```
     NMD_transcript_variant
     coding_sequence_variant
