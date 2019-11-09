@@ -3,3 +3,6 @@ denali:/home/mwyczalk_test/Projects/TinDaisy/TinDaisy-Core/image.setup/B_Filter/
 
 GRCh38.callRegions.bed from https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md#extended-use-cases
 It is used to restrict strelka2 analysis to just the described regions
+processed with,
+    bgzip GRCh38.callRegions.bed
+    tabix GRCh38.callRegions.bed.gz
