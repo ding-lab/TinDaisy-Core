@@ -6,6 +6,12 @@
 # Optional arg manta_vcf is explained in best practice here; https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md#configuration
 # implemented only for is_strelka2
 # num_parallel defines number of jobs to run at once, default is 4
+# Comment about call_regions from https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md#call-regions
+#   Strelka calls the entire genome by default, however variant calling may be
+#   restricted to an arbitrary subset of the genome by providing a region file in
+#   BED format with the --callRegions configuration option. The BED file must be
+#   bgzip-compressed and tabix-indexed, and only one such BED file may be
+#   specified.
 sub run_strelka2 {
     my $IN_bam_T = shift;
     my $IN_bam_N = shift;
@@ -15,6 +21,7 @@ sub run_strelka2 {
     my $strelka_config = shift;
     my $manta_vcf = shift;    
     my $num_parallel = shift;
+    my $call_regions = shift;
 
     print STDERR "Running Strelka 2\n";
     $strelka_bin="$SWpaths::strelka2_dir/bin/configureStrelkaSomaticWorkflow.py";
@@ -37,6 +44,9 @@ sub run_strelka2 {
     }
     if ($manta_vcf) {
         $strelka_flags .= " --indelCandidates $manta_vcf ";
+    }
+    if ($call_regions) {
+        $strelka_flags .= " --callRegions $call_regions ";
     }
 
     my $expected_out;
