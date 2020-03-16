@@ -1,9 +1,0 @@
-Goal of this branch is to implement --callRegions flag in strelka2 call.
-This is described here: https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md#extended-use-cases
-Based on runs here: /gscuser/mwyczalk/projects/TinDaisy/CromwellRunner/GBM.WGS.20191010
-  strelka2 crashes repeatedly on WGS data, exits with error code 25
-
-Also updating priority in merge step as discussed with Fernanda 11/8/19:
-* SNV: varscan, mutect, strelka
-* indel: varscan, pindel, strelka
-
