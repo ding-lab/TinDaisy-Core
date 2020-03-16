@@ -62,6 +62,7 @@ run_strelka2:
     --strelka_config s: path to strelka.ini file.  Required
     --manta_vcf: pass Manta VCF calls to Strelka2 as input.  Optional
     --num_parallel_strelka2 n: number of jobs to process at a time.  Default 4
+    --call_regions: bgzip-compressed tabix-indexed BED file to restrict variant calling region.  Optional
 run_varscan:
     --tumor_bam s:  path to tumor BAM.  Required
     --normal_bam s: path to normal BAM.  Required
@@ -206,6 +207,7 @@ my $chrlist;
 my $num_parallel_strelka2;
 my $num_parallel_pindel;
 my $manta_vcf;
+my $call_regions;
 
 
 GetOptions(
@@ -258,6 +260,7 @@ GetOptions(
     'num_parallel_strelka2=s' => \$num_parallel_strelka2,
     'num_parallel_pindel=s' => \$num_parallel_pindel,
     'manta_vcf=s' => \$manta_vcf,
+    'call_regions=s' => \$call_regions,
 ) or die "Error parsing command line args.\n$usage\n";
 
 die $usage unless @ARGV >= 1;
@@ -295,7 +298,7 @@ if (($step_number eq '1') || ($step_number eq 'run_strelka')) {
     die("normal_bam undefined \n") unless $normal_bam;
     die("strelka_config undefined \n") unless $strelka_config;
     die("reference_fasta undefined \n") unless $reference_fasta;
-    run_strelka2($tumor_bam, $normal_bam, $results_dir, $job_files_dir, $reference_fasta, $strelka_config, $manta_vcf, $num_parallel_strelka2);
+    run_strelka2($tumor_bam, $normal_bam, $results_dir, $job_files_dir, $reference_fasta, $strelka_config, $manta_vcf, $num_parallel_strelka2, $call_regions);
 
 } elsif (($step_number eq '2') || ($step_number eq 'run_varscan')) {
     die("tumor_bam undefined \n") unless $tumor_bam;

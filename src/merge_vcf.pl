@@ -46,19 +46,12 @@ sub merge_vcf {
     print STDERR "Writing to $runfn\n";
     open(OUT, ">$runfn") or die $!;
 
-#New merge script from SomaticWrapper.working/somaticwrapper.pl
-#   java \${JAVA_OPTS} -jar $gatk -R $h38_REF -T CombineVariants -o \${MERGER_OUT} 
-#       --variant:varscan \${VARSCAN_VCF} 
-#       --variant:strelka \${STRELKA_VCF} 
-#       --variant:mutect \${MUTECT_VCF} 
-#       --variant:varindel \${VARSCAN_INDEL} 
-#       --variant:sindel \${STRELKA_INDEL} 
-#       --variant:pindel \${PINDEL_VCF_FILTER} 
-#       -genotypeMergeOptions PRIORITIZE -priority strelka,varscan,mutect,sindel,varindel,pindel
-
 # Testing indicates there are issues merging Mutect VCF having to do with incompatible contigs: mutect is subset of reference.
 # Solution is to use flag below to turn errors into warnings; see discussion in README.md:
 # -U ALLOW_SEQ_DICT_INCOMPATIBILITY
+# Updating merge order.  Previously: strelka,varscan,mutect,sindel,varindel,pindel
+#   Changing to: varscan,mutect,strelka,varindel,pindel,sindel
+# Reason for change is to retain varscan's superior FORMAT information, which has genotype (GT) and other details
 
     print OUT <<"EOF";
 #!/bin/bash
@@ -70,7 +63,7 @@ export JAVA_OPTS=\"-Xmx2g\"
     --variant:varindel $varscan_indel_vcf \\
     --variant:sindel $strelka_indel_vcf \\
     --variant:pindel $pindel_vcf \\
-    -genotypeMergeOptions PRIORITIZE -priority strelka,varscan,mutect,sindel,varindel,pindel \\
+    -genotypeMergeOptions PRIORITIZE -priority varscan,mutect,strelka,varindel,pindel,sindel \\
     -U ALLOW_SEQ_DICT_INCOMPATIBILITY
 
 # Evaluate return value see https://stackoverflow.com/questions/90418/exit-shell-script-based-on-process-exit-code
