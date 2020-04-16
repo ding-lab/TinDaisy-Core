@@ -127,14 +127,6 @@ RUN apt-get update \
     && apt-get clean
 RUN cpanm DBI DBD::mysql 
 
-# install VEP - we do not install cache into the image, it will be downloaded during setup
-# See here for discussion of caches: https://www.ensembl.org/info/docs/tools/vep/script/vep_cache.html
-# Cache dir will be /data/D_Ensembl
-
-RUN cd /usr/local \
-    && git clone https://github.com/Ensembl/ensembl-vep.git  \
-    && cd /usr/local/ensembl-vep \
-    && perl INSTALL.pl /data/D_Ensembl -a a
 
 # Install Strelka2 
 RUN cd /usr/local \
@@ -157,6 +149,15 @@ RUN cd /usr/local \
     && curl -L -o mskcc-vcf2maf.tar.gz $VCF2MAF_URL \
     && tar -zxf mskcc-vcf2maf.tar.gz \
     && ln -s mskcc-vcf2maf-* mskcc-vcf2maf 
+
+# install VEP - we do not install cache into the image, it will be downloaded during setup
+# See here for discussion of caches: https://www.ensembl.org/info/docs/tools/vep/script/vep_cache.html
+# Cache dir will be /data/D_Ensembl
+
+RUN cd /usr/local \
+    && git clone https://github.com/Ensembl/ensembl-vep.git  \
+    && cd /usr/local/ensembl-vep \
+    && perl INSTALL.pl /data/D_Ensembl -a a
 
 COPY docker/vimrc /root/.vimrc
 
