@@ -3,7 +3,7 @@
 #DOCKER_IMAGE="mwyczalkowski/somatic-wrapper:cwl"
 
 # Policy is to make all public images on katmai
-DOCKER_IMAGE="mwyczalkowski/tindaisy-core:revep"
+DOCKER_IMAGE="mwyczalkowski/tindaisy-vep"
 
 # If variable below evaluates to true, prevent `docker push`
 NO_PUSH=0
