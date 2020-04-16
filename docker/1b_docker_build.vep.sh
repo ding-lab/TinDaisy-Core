@@ -1,6 +1,6 @@
-# Currently built on denali
+# build tindaisy-vep
 
-source docker_image.sh
+source docker_image.vep.sh
 
 # Build needs to take place in root directory of project
 cd ..

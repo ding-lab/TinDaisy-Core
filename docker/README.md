@@ -1,22 +1,14 @@
-Build docker image containing TinDaisy-Core and all
-necessary software to run it.
+Build docker image containing TinDaisy-Core and all necessary software to run it.
 
-`../docker.testing` includes scripts to start docker image and execute
-specific steps from within the docker environment.  This is useful for
-debugging and feature development.
+Currently building two images:
+* mwyczalkowski/tindaisy-core
+* mwyczalkowski/tindaisy-vep
 
-`./StrelkaDemo.dat` includes small test dataset (`StrelkaDemo`) which is used
-for testing of workflow.
+the tindaisy-vep image is a subset of tindaisy-core, with only VEP annotation-specific installation
+
+Note that re-building tindaisy-core may fail because of updated versions of downloaded software
+May be necessary to update Dockerfile dependencies or specify specific software versions
 
 [TinDaisy](https://github.com/ding-lab/TinDaisy) is an associated CWL-based workflow wrapper
 which includes TinDaisy-Core
-
-## Tags
-
-Currently TinDaisy-Core has the following image:
-`cgc-images.sbgenomics.com/m_wyczalkowski/tindaisy-core:20181126`
-
-Images tagged as below circa 1/22/19 to indicate unstable development branch 
-`cgc-images.sbgenomics.com/m_wyczalkowski/tindaisy-core:dev`
-
 

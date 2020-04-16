@@ -7,18 +7,18 @@ LABEL author="Matt Wyczalkowski" \
 # See https://useast.ensembl.org/info/docs/tools/vep/script/vep_download.html
 
 RUN apt-get update && apt-get install -y \
-    autoconf \
-    bedtools \
+#    autoconf \
+#    bedtools \
     build-essential \
 #    bwa \
 #    cmake \
     cpanminus \
-#    curl \
+    curl \
 #    default-jre \
 #    gawk \
     git \
-#    libbz2-dev \ 
-#    liblzma-dev \
+    libbz2-dev \ 
+    liblzma-dev \
 #    libncurses-dev \
 #    parallel \
 #    python \

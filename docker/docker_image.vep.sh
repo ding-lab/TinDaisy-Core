@@ -1,6 +1,5 @@
-# Image name associated with docker build and push
+# Image name associated with docker build and push of tindaisy-vep
 
-#DOCKER_IMAGE="mwyczalkowski/somatic-wrapper:cwl"
 
 # Policy is to make all public images on katmai
 DOCKER_IMAGE="mwyczalkowski/tindaisy-vep"
