@@ -1,7 +1,7 @@
 IMG="cgc-images.sbgenomics.com/m_wyczalkowski/tindaisy-core:dev"
 
 
-:ONFIG="project_data.sh"
+CONFIG="project_data.sh"
 source $CONFIG
 
 OUTD="/diskmnt/Projects/cptac_downloads_4/TinDaisy-Core"
