@@ -1,11 +1,12 @@
-CACHED="/data/image.data/D_VEP"
+CACHED="/data/v99"
 mkdir -p $CACHED
 
-CWD=`pwd`
-cd /usr/local/ensembl-vep
+# Where VEP is installed in docker image
+VEPD="/usr/local/ensembl-vep"
+#CWD=`pwd`
+#cd /usr/local/ensembl-vep
 
-#perl INSTALL.pl -a cf -s homo_sapiens -y GRCh37,GRCh38 --CACHEDIR $CACHED
-perl INSTALL.pl -a cf -s homo_sapiens -y GRCh37 --CACHEDIR $CACHED
-perl INSTALL.pl -a cf -s homo_sapiens -y GRCh38 --CACHEDIR $CACHED
+#perl INSTALL.pl -a cf -s homo_sapiens -y GRCh37 --CACHEDIR $CACHED
+perl $VEPD/INSTALL.pl -a cf -s homo_sapiens -y GRCh38 --CACHEDIR $CACHED
 
-cd $CWD
+#cd $CWD

@@ -1,10 +1,20 @@
-# install VEP cache
+# Install VEP cache
 
-# This is important for performance reasons.  However, should be able to test VEP without it.
+This is important for performance reasons.  However, can test VEP without it.
 
-# See also here for how to install cache separately in a docker environment: https://www.ensembl.org/info/docs/tools/vep/script/vep_download.html#docker
-# See here for discussion of caches: https://www.ensembl.org/info/docs/tools/vep/script/vep_cache.html
+We are using tindaisy-vep docker image for installation.
 
-# to install the cache, try
-# later, perl INSTALL.pl -a cf -s homo_sapiens -y GRCh37,GRCh38 --CACHEDIR /data/D_VEP
+See also here for how to install cache using ensemble docker : https://www.ensembl.org/info/docs/tools/vep/script/vep_download.html#docker
+See here for discussion of caches: https://www.ensembl.org/info/docs/tools/vep/script/vep_cache.html
 
+## 0_start_docker.sh
+
+Starts docker container and maps a path DATA_HOST to /data.  
+
+## 1_install_cache.sh
+
+Calls VEP scripts to download and process cache.  
+
+## 2_make_tar.sh
+
+Creates .tar.gz file which is needed for fast annotation
